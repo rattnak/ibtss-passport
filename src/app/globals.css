@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  --navy: #1B2A4A;
+  --navy-light: #243659;
+  --gold: #C9A84C;
+  --gold-light: #E8C96A;
+  --cream: #F5F0E8;
+  --cream-dark: #EAE3D6;
+  --stamp-1: #2A9D8F;
+  --stamp-1l: #3BBFB0;
+  --stamp-2: #C2603A;
+  --stamp-2l: #E07A58;
+  --stamp-3: #6B4FA0;
+  --stamp-3l: #8B6EC0;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Passport page paper texture */
+.passport-paper {
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(180,160,120,0.08) 32px),
+    var(--cream);
+}
+
+/* Passport cover gradient */
+.passport-cover-bg {
+  background: linear-gradient(170deg, #1e3060 0%, #1B2A4A 50%, #131f37 100%);
+}
+
+/* Ink stamp animation */
+@keyframes inkPress {
+  0%   { transform: scale(1.4); opacity: 0.3; }
+  55%  { transform: scale(0.92); opacity: 1; }
+  75%  { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+.stamp-animate {
+  animation: inkPress 0.65s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+/* Slide-up entrance */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.slide-up {
+  animation: slideUp 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
