@@ -1,36 +1,148 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# IBTSS 2026 AI Learning Passport
 
-## Getting Started
+A digital passport web app for the **IBTSS 2026 Pre-Conference Workshop — AI in Higher Education: From Challenge to Opportunity** at Fort Hays State University.
 
-First, run the development server:
+Participants register, visit three AI workshop stations, scan QR codes to collect stamps, receive resources by email, and share a completion passport to LinkedIn.
+
+---
+
+## Functionalities
+
+### Participant Registration
+- Participants enter their name and email at the landing page
+- A unique passport is created in the database and linked to their email
+- They are redirected to their personal passport URL (`/passport/[uuid]`) which is persistent and shareable
+
+### QR Code Stamp Collection
+- Each of the 3 workshop stations has a dedicated QR code displayed at `/admin/station/[1|2|3]`
+- Scanning the QR code takes participants to `/stamp/[stationId]`
+- Participants enter their email to record their visit
+- Stamps are deduplicated — scanning the same station twice is handled gracefully with an "Already Collected" state
+- Each station is color-coded with its own ink stamp design (teal, orange, purple)
+
+### Automatic Email Delivery
+- On each new stamp, a resource email is sent to the participant containing links and materials for that station
+- On completing all 3 stations, a separate completion email is sent
+- Emails are sent via Resend from `onboarding@resend.dev` (sandbox) or a verified domain in production
+
+### Passport View
+- Each participant has a personal passport page at `/passport/[uuid]`
+- Displays a navy passport cover with gold SVG emblem and the participant's name
+- Inside pages show all 3 stamp slots: empty (dashed circle) or stamped (colored ink circle with animation)
+- A progress bar tracks how many stations have been completed
+- A completion banner appears with a direct link to the Share tab once all 3 are collected
+
+### LinkedIn Share Flow
+- The Share tab unlocks only after all 3 stamps are collected
+- Shows a summary card of the completed passport with station names and dates
+- Participants can add a personal reflection that gets prepended to the post
+- A post preview renders in real time before sharing
+- Uses LinkedIn's `shareArticle` API with pre-filled title and summary text
+- A "Copy shareable link" button copies the participant's unique passport URL
+
+### Resources Tab
+- Lists workshop materials, AI tool links, and references organized by group
+- Available at any time during the event
+
+### Admin QR Display
+- Facilitators open `/admin/station/[1|2|3]` on a tablet or laptop at each station
+- Shows the station's QR code on a styled card, ready to be scanned
+- Includes a Print button for physical backup copies
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| Language | TypeScript |
+| Database | Supabase (PostgreSQL + Row Level Security) |
+| Email | Resend API |
+| QR Generation | `qrcode` npm package |
+| Icons | `lucide-react` |
+| Fonts | Playfair Display + Inter (Google Fonts) |
+| Styling | Tailwind CSS + CSS custom properties |
+| Deployment | Vercel |
+
+---
+
+## Stations
+
+| Station | Audience | Tool |
+|---|---|---|
+| 1 | Faculty | NotebookLM |
+| 2 | Administrators & Staff | gethouston.ai |
+| 3 | Students | Claude + Perplexity |
+
+---
+
+## Local Development
 
 ```bash
+npm install
+cp .env.local.example .env.local   # fill in your keys
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# or if next isn't in PATH:
+./node_modules/.bin/next dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Required Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+RESEND_API_KEY=
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+```
 
-## Learn More
+### Database Setup
 
-To learn more about Next.js, take a look at the following resources:
+Run `supabase-schema.sql` in your Supabase project's SQL Editor. This creates:
+- `participants` table
+- `stamps` table (unique constraint on `participant_id + station_id`)
+- `passport_progress` view (aggregates stamp count and completion status per participant)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deployment
 
-## Deploy on Vercel
+1. Push to GitHub
+2. Import into [Vercel](https://vercel.com) — auto-detects Next.js, zero config
+3. Add all environment variables in Vercel dashboard (Settings → Environment Variables)
+4. Update `NEXT_PUBLIC_BASE_URL` to your Vercel deployment URL
+5. Redeploy
+6. Print QR pages from `/admin/station/1`, `/admin/station/2`, `/admin/station/3`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Before the Event
+- Verify `fhsu.edu` domain in [Resend](https://resend.com) so emails reach all participants (not just your own address)
+- Update the `from` address in `src/lib/email.ts` from `onboarding@resend.dev` to `noreply@fhsu.edu`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── page.tsx                          # Registration
+│   ├── passport/[id]/page.tsx            # Passport view
+│   ├── stamp/[stationId]/page.tsx        # QR stamp landing
+│   ├── admin/station/[stationId]/page.tsx # Admin QR display
+│   └── api/
+│       ├── register/route.ts
+│       ├── stamp/route.ts
+│       ├── passport/[id]/route.ts
+│       └── participant-by-email/route.ts
+└── lib/
+    ├── stations.ts   # Station definitions (single source of truth)
+    ├── supabase.ts   # Supabase anon + service role clients
+    └── email.ts      # Resend email templates
+```
+
+---
+
+Maintained by [Chanrattnak Mong](https://github.com/rattnak) — FHSU Technology and Innovation in Learning and Teaching (TILT)
