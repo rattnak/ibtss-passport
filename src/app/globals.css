@@ -1,13 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
+/* FHSU brand typography: sans-serif (Avenir-like). Barlow is the typeface of the FHSU brand book. */
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@600;700&display=swap');
 @import "tailwindcss";
 
 :root {
-  --navy: #1B2A4A;
-  --navy-light: #243659;
-  --gold: #C9A84C;
-  --gold-light: #E8C96A;
-  --cream: #F5F0E8;
-  --cream-dark: #EAE3D6;
+  /* FHSU brand standards: Black (PMS Black 6) + Gold (PMS 130 C, #F7A800) on white */
+  --fhsu-gold: #F7A800;
+  --fhsu-black: #000000;
+  --navy: #000000;
+  --navy-light: #1a1a1a;
+  --gold: #F7A800;
+  --gold-light: #FFC72C;
+  --cream: #FFFFFF;
+  --cream-dark: #F5F5F5;
   --stamp-1: #2A9D8F;
   --stamp-1l: #3BBFB0;
   --stamp-2: #C2603A;
@@ -18,22 +22,76 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
+/* Accessible gold: use for small text on white (WCAG AA); pure gold is for fills/accents */
+:root { --gold-text: #8A6A00; }
+
+/* Visible keyboard focus everywhere */
+:focus-visible {
+  outline: 3px solid var(--fhsu-gold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Space for the fixed bottom navigation bar */
+.has-bottom-nav {
+  padding-bottom: calc(76px + env(safe-area-inset-bottom));
+}
+
+/* Responsive page column: phone-first, widens on tablet/desktop */
+.page-container {
+  width: 100%;
+  max-width: 28rem; /* 448px */
+}
+@media (min-width: 640px) {
+  .page-container { max-width: 36rem; } /* 576px */
+}
+@media (min-width: 1024px) {
+  .page-container { max-width: 42rem; } /* 672px */
+}
+
+/* Top bar responsiveness: hide the subtitle on tiny screens, grow the name chip with viewport */
+.topbar-sub { display: none; }
+@media (min-width: 400px) { .topbar-sub { display: inline; } }
+
+.topbar-name {
+  max-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (min-width: 480px) { .topbar-name { max-width: 170px; } }
+@media (min-width: 768px) { .topbar-name { max-width: 280px; } }
+
+/* Card grid: single column on phones, two columns from tablet up */
+.card-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) {
+  .card-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
 html, body {
   height: 100%;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Barlow', 'Avenir', 'Helvetica Neue', Arial, sans-serif;
   -webkit-tap-highlight-color: transparent;
 }
 
 /* Passport page paper texture */
 .passport-paper {
   background:
-    repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(180,160,120,0.08) 32px),
+    repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(0,0,0,0.045) 32px),
     var(--cream);
 }
 
-/* Passport cover gradient */
+/* Dark hero band — FHSU black */
 .passport-cover-bg {
-  background: linear-gradient(170deg, #1e3060 0%, #1B2A4A 50%, #131f37 100%);
+  background: linear-gradient(170deg, #1a1a1a 0%, #000000 60%, #000000 100%);
 }
 
 /* Ink stamp animation */
