@@ -1,52 +1,126 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { BookOpen, Settings2, Search } from "lucide-react";
-import { STATIONS } from "@/lib/stations";
+import Link from "next/link";
+import {
+  ChevronDown, Clock, MapPin, Coffee, PenLine, BookOpen,
+  Stamp, ArrowRight, FileText,
+} from "lucide-react";
+import { AGENDA, WORKSHOP_INFO, AgendaSession } from "@/lib/agenda";
 
-const STATION_ICONS = [BookOpen, Settings2, Search];
-const STATION_COLORS = [
-  { color: "#2A9D8F", colorLight: "#3BBFB0", colorBg: "rgba(42,157,143,0.1)" },
-  { color: "#C2603A", colorLight: "#E07A58", colorBg: "rgba(194,96,58,0.1)" },
-  { color: "#6B4FA0", colorLight: "#8B6EC0", colorBg: "rgba(107,79,160,0.1)" },
-];
+function SessionCard({ session }: { session: AgendaSession }) {
+  const [open, setOpen] = useState(false);
+  const hasLinks = session.links.length > 0;
 
-export default function HomePage() {
-  const router = useRouter();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  async function handleStart(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    const res = await fetch("/api/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email }),
-    });
-    const data = await res.json();
-    if (!res.ok) { setError(data.error ?? "Something went wrong."); setLoading(false); return; }
-    router.push(`/passport/${data.id}`);
+  if (session.isBreak) {
+    return (
+      <div style={{
+        display: "flex", alignItems: "center", gap: 12,
+        padding: "10px 16px", borderRadius: 12,
+        border: "1px dashed #D5D5D5",
+        color: "#999",
+      }}>
+        <Coffee size={15} strokeWidth={2} />
+        <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: 0.5, whiteSpace: "nowrap" }}>
+          {session.start} – {session.end}
+        </span>
+        <span style={{ fontSize: 12, lineHeight: 1.4 }}>{session.description}</span>
+      </div>
+    );
   }
 
   return (
-    <main className="min-h-screen passport-cover-bg flex flex-col items-center justify-center px-4 py-10">
+    <div style={{
+      background: "white",
+      border: "1px solid #E8E8E8",
+      borderLeft: `3px solid var(--gold)`,
+      borderRadius: 14, overflow: "hidden",
+      boxShadow: "0 1px 6px rgba(0,0,0,0.04)",
+    }}>
+      <button
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        style={{
+          display: "flex", alignItems: "flex-start", gap: 14, width: "100%",
+          padding: "16px 16px", minHeight: 64, background: "none", border: "none",
+          cursor: "pointer", textAlign: "left", fontFamily: "inherit",
+        }}
+      >
+        <div style={{ flexShrink: 0, textAlign: "center", minWidth: 52 }}>
+          <p style={{ fontSize: 15, fontWeight: 800, color: "var(--fhsu-black)", lineHeight: 1.2 }}>{session.start}</p>
+          <p style={{ fontSize: 10, color: "#AAA", marginTop: 2 }}>{session.end}</p>
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase", color: "var(--gold-text)", marginBottom: 3 }}>
+            {session.label} · {session.format}
+          </p>
+          <p style={{ fontSize: 15, fontWeight: 700, color: "var(--fhsu-black)", lineHeight: 1.3 }}>{session.title}</p>
+        </div>
+        <ChevronDown
+          size={18} color="#BBB" strokeWidth={2}
+          style={{ flexShrink: 0, marginTop: 4, transform: open ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}
+        />
+      </button>
 
-      {/* Passport Cover Card */}
-      <div className="w-full max-w-sm mb-8">
-        <div style={{
-          border: "1.5px solid rgba(201,168,76,0.45)",
+      {open && (
+        <div className="slide-up" style={{ padding: "0 16px 16px 82px" }}>
+          <p style={{ fontSize: 13, color: "#666", lineHeight: 1.6, marginBottom: hasLinks ? 14 : 0 }}>
+            {session.description}
+          </p>
+          {hasLinks && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase", color: "#AAA" }}>
+                Session Materials
+              </p>
+              {session.links.map((link) => (
+                <Link key={link.href} href={link.href} style={{
+                  display: "flex", alignItems: "center", gap: 10,
+                  background: "#FAFAFA",
+                  border: "1px solid #ECECEC",
+                  borderRadius: 10, padding: "10px 12px",
+                  textDecoration: "none",
+                }}>
+                  <div style={{
+                    width: 28, height: 28, borderRadius: 8, flexShrink: 0,
+                    background: link.interactive ? "rgba(247,168,0,0.16)" : "#EFEFEF",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    {link.href === "/stations"
+                      ? <Stamp size={14} color="var(--gold-text)" strokeWidth={2} />
+                      : link.interactive
+                        ? <PenLine size={14} color="var(--gold-text)" strokeWidth={2} />
+                        : <FileText size={14} color="#888" strokeWidth={2} />}
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 13, fontWeight: 600, color: "var(--fhsu-black)", lineHeight: 1.3 }}>{link.title}</p>
+                    <p style={{ fontSize: 10.5, color: "#999", marginTop: 1 }}>
+                      {link.source}{link.interactive ? " · fill-in worksheet" : ""}
+                    </p>
+                  </div>
+                  <ArrowRight size={14} color="#BBB" strokeWidth={2} style={{ flexShrink: 0 }} />
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <main className="min-h-full flex flex-col items-center px-4 py-8" style={{ background: "white" }}>
+
+      {/* ── Header / Banner ── */}
+      <div className="page-container mb-8">
+        <div className="passport-cover-bg" style={{
+          border: "1.5px solid var(--gold)",
           borderRadius: 16,
-          padding: "28px 24px 24px",
+          padding: "26px 24px 22px",
           textAlign: "center",
-          background: "linear-gradient(160deg, rgba(255,255,255,0.03) 0%, transparent 100%)",
           position: "relative",
         }}>
-          {/* Corner marks */}
           {[
             { top: -1, left: -1, borderWidth: "2px 0 0 2px", borderRadius: "10px 0 0 0" },
             { top: -1, right: -1, borderWidth: "2px 2px 0 0", borderRadius: "0 10px 0 0" },
@@ -56,129 +130,85 @@ export default function HomePage() {
             <span key={i} style={{ position: "absolute", width: 14, height: 14, borderColor: "var(--gold)", borderStyle: "solid", ...s }} />
           ))}
 
-          {/* SVG Emblem */}
-          <svg viewBox="0 0 120 120" style={{ width: 88, height: 88, margin: "0 auto 12px" }} xmlns="http://www.w3.org/2000/svg">
-            <circle cx="60" cy="60" r="54" fill="none" stroke="#C9A84C" strokeWidth="1.5"/>
-            <circle cx="60" cy="60" r="45" fill="none" stroke="#C9A84C" strokeWidth="0.6" strokeDasharray="3 2"/>
-            <g opacity="0.85">
-              <path d="M18 68 Q12 55 18 42 Q24 55 18 68Z" fill="#C9A84C"/>
-              <path d="M14 60 Q8 47 15 35 Q20 48 14 60Z" fill="#C9A84C" opacity="0.7"/>
-              <path d="M21 76 Q15 63 22 51 Q27 63 21 76Z" fill="#C9A84C" opacity="0.7"/>
-              <path d="M11 52 Q7 41 13 30 Q17 41 11 52Z" fill="#C9A84C" opacity="0.5"/>
-            </g>
-            <g opacity="0.85">
-              <path d="M102 68 Q108 55 102 42 Q96 55 102 68Z" fill="#C9A84C"/>
-              <path d="M106 60 Q112 47 105 35 Q100 48 106 60Z" fill="#C9A84C" opacity="0.7"/>
-              <path d="M99 76 Q105 63 98 51 Q93 63 99 76Z" fill="#C9A84C" opacity="0.7"/>
-              <path d="M109 52 Q113 41 107 30 Q103 41 109 52Z" fill="#C9A84C" opacity="0.5"/>
-            </g>
-            <polygon points="60,22 64,36 78,36 67,45 71,59 60,50 49,59 53,45 42,36 56,36" fill="#C9A84C"/>
-            <rect x="34" y="82" width="52" height="10" rx="2" fill="#C9A84C" opacity="0.75"/>
-            <text x="60" y="90" textAnchor="middle" fontSize="5.5" fill="#1B2A4A" fontFamily="Georgia,serif" fontWeight="bold" letterSpacing="0.5">FHSU · IBTSS</text>
-          </svg>
-
-          <p style={{ color: "rgba(201,168,76,0.6)", fontSize: 9, letterSpacing: 2, textTransform: "uppercase", marginBottom: 6 }}>
-            2026 Pre-Conference Workshop
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/passport-logo.png"
+            alt="FHSU AI in Higher Education — IBTSS 2026 Pre-Conference badge"
+            style={{ width: 92, height: "auto", margin: "0 auto 12px", display: "block", filter: "drop-shadow(0 3px 10px rgba(0,0,0,0.4))" }}
+          />
+          <p style={{ color: "var(--gold)", fontSize: 10, letterSpacing: 2.5, textTransform: "uppercase", fontWeight: 700, marginBottom: 8 }}>
+            FHSU · {WORKSHOP_INFO.event}
           </p>
-          <h1 style={{ color: "var(--gold)", fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, lineHeight: 1.15, marginBottom: 6 }}>
-            AI Learning<br />Passport
-          </h1>
-          <p style={{ color: "rgba(201,168,76,0.5)", fontSize: 10, letterSpacing: 1.5, textTransform: "uppercase" }}>
+          <h1 style={{ color: "var(--gold)", fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 26, fontWeight: 700, lineHeight: 1.2, marginBottom: 10 }}>
             AI in Higher Education
+          </h1>
+          <p style={{ color: "rgba(255,255,255,0.75)", fontSize: 13, fontStyle: "italic", marginBottom: 14 }}>
+            From Challenge to Opportunity
           </p>
+          <div style={{ display: "flex", justifyContent: "center", gap: 16, flexWrap: "wrap" }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "rgba(255,255,255,0.7)" }}>
+              <Clock size={13} color="var(--gold)" strokeWidth={2} /> {WORKSHOP_INFO.date} · {WORKSHOP_INFO.time}
+            </span>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "rgba(255,255,255,0.7)" }}>
+              <MapPin size={13} color="var(--gold)" strokeWidth={2} /> AUPP · Phnom Penh
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* Station preview pills */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 8, width: "100%", maxWidth: 360, marginBottom: 24 }}>
-        {STATIONS.map((station, i) => {
-          const Icon = STATION_ICONS[i];
-          const sc = STATION_COLORS[i];
-          return (
-            <div key={station.id} style={{
-              display: "flex", alignItems: "center", gap: 12,
-              background: "rgba(255,255,255,0.05)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              borderLeft: `3px solid ${sc.color}`,
-              borderRadius: 12, padding: "12px 14px",
-            }}>
-              <div style={{ width: 32, height: 32, borderRadius: "50%", background: sc.colorBg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <Icon size={16} color={sc.color} strokeWidth={2} />
-              </div>
-              <div>
-                <p style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 2 }}>
-                  Station {station.id} · {station.audience}
-                </p>
-                <p style={{ fontSize: 13, color: "white", fontWeight: 600 }}>{station.title}</p>
-              </div>
-            </div>
-          );
-        })}
+      {/* ── Agenda ── */}
+      <div className="page-container" style={{ marginBottom: 28 }}>
+        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 12 }}>
+          <h2 style={{ fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 20, fontWeight: 700, color: "var(--fhsu-black)" }}>
+            Workshop Agenda
+          </h2>
+          <p style={{ fontSize: 11, color: "#999" }}>Tap a session for materials</p>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {AGENDA.map((session) => <SessionCard key={session.id} session={session} />)}
+        </div>
       </div>
 
-      {/* Registration form */}
-      <div style={{
-        background: "var(--cream)", borderRadius: 20,
-        padding: "28px 24px", width: "100%", maxWidth: 360,
-        boxShadow: "0 8px 40px rgba(0,0,0,0.35)",
+      {/* ── Stations shortcut ── */}
+      <Link href="/stations" className="page-container" style={{
+        display: "flex", alignItems: "center", gap: 14, textDecoration: "none",
+        background: "linear-gradient(135deg, rgba(247,168,0,0.16), rgba(247,168,0,0.06))",
+        border: "1px solid var(--gold)",
+        borderRadius: 14, padding: "14px 16px", marginBottom: 28,
       }}>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: "var(--navy)", fontWeight: 700, marginBottom: 4 }}>
-          Get your passport
-        </h2>
-        <p style={{ fontSize: 13, color: "#888", marginBottom: 20 }}>
-          Enter your details to start collecting stamps.
-        </p>
+        <div style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(247,168,0,0.22)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <Stamp size={19} color="var(--gold-text)" strokeWidth={2} />
+        </div>
+        <div style={{ flex: 1 }}>
+          <p style={{ fontSize: 14, fontWeight: 700, color: "var(--fhsu-black)" }}>AI Tool Stations Check-In</p>
+          <p style={{ fontSize: 11.5, color: "var(--gold-text)", marginTop: 2 }}>
+            Visit all 3 stations to complete your AI Learning Passport
+          </p>
+        </div>
+        <ArrowRight size={17} color="var(--gold-text)" strokeWidth={2} style={{ flexShrink: 0 }} />
+      </Link>
 
-        <form onSubmit={handleStart} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          <div>
-            <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "var(--navy)", marginBottom: 6 }}>
-              Full Name
-            </label>
-            <input
-              type="text" required value={name} onChange={(e) => setName(e.target.value)}
-              placeholder="Jane Smith"
-              style={{
-                width: "100%", border: "1.5px solid #DDD5C4", borderRadius: 12,
-                padding: "12px 14px", fontSize: 14, color: "#1a1a1a",
-                background: "white", outline: "none", fontFamily: "inherit",
-              }}
-              onFocus={(e) => (e.target.style.borderColor = "var(--navy)")}
-              onBlur={(e) => (e.target.style.borderColor = "#DDD5C4")}
-            />
-          </div>
-          <div>
-            <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "var(--navy)", marginBottom: 6 }}>
-              Email Address
-            </label>
-            <input
-              type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
-              placeholder="jane@fhsu.edu"
-              style={{
-                width: "100%", border: "1.5px solid #DDD5C4", borderRadius: 12,
-                padding: "12px 14px", fontSize: 14, color: "#1a1a1a",
-                background: "white", outline: "none", fontFamily: "inherit",
-              }}
-              onFocus={(e) => (e.target.style.borderColor = "var(--navy)")}
-              onBlur={(e) => (e.target.style.borderColor = "#DDD5C4")}
-            />
-          </div>
+      {/* ── Passport CTA (register/sign in lives on the Passport tab) ── */}
+      <Link href="/my-passport" className="page-container" style={{
+        display: "flex", alignItems: "center", gap: 14, textDecoration: "none",
+        background: "var(--fhsu-black)",
+        borderRadius: 14, padding: "16px 18px", marginBottom: 28,
+      }}>
+        <div style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(247,168,0,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <BookOpen size={19} color="var(--fhsu-gold)" strokeWidth={2} aria-hidden="true" />
+        </div>
+        <div style={{ flex: 1 }}>
+          <p style={{ fontSize: 14, fontWeight: 700, color: "var(--fhsu-gold)" }}>Get your AI Learning Passport</p>
+          <p style={{ fontSize: 11.5, color: "rgba(255,255,255,0.7)", marginTop: 2 }}>
+            Register or sign in to collect stamps and save your worksheets
+          </p>
+        </div>
+        <ArrowRight size={17} color="var(--fhsu-gold)" strokeWidth={2} aria-hidden="true" style={{ flexShrink: 0 }} />
+      </Link>
 
-          {error && <p style={{ fontSize: 13, color: "#c0392b" }}>{error}</p>}
-
-          <button
-            type="submit" disabled={loading}
-            style={{
-              width: "100%", background: loading ? "#aaa" : "var(--gold)", color: "var(--navy)",
-              border: "none", borderRadius: 14, padding: "14px 0",
-              fontSize: 15, fontWeight: 700, cursor: loading ? "not-allowed" : "pointer",
-              fontFamily: "inherit", marginTop: 4,
-              transition: "opacity 0.15s",
-            }}
-          >
-            {loading ? "Starting…" : "Start My Passport →"}
-          </button>
-        </form>
-      </div>
+      <p style={{ fontSize: 11, color: "#AAA", marginTop: 24, textAlign: "center" }}>
+        Presented by {WORKSHOP_INFO.presenters.map((p) => p.name).join(" & ")} · Fort Hays State University
+      </p>
     </main>
   );
 }
