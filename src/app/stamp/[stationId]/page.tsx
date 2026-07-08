@@ -33,8 +33,8 @@ export default function StampPage() {
 
   if (!station || !sc || !Icon) {
     return (
-      <main className="min-h-screen passport-cover-bg flex items-center justify-center">
-        <p style={{ color: "rgba(201,168,76,0.7)", fontFamily: "'Playfair Display', serif", fontSize: 18 }}>Invalid station.</p>
+      <main className="min-h-full flex items-center justify-center" style={{ background: "white" }}>
+        <p style={{ color: "var(--gold-text)", fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 18 }}>Invalid station.</p>
       </main>
     );
   }
@@ -49,6 +49,7 @@ export default function StampPage() {
       return;
     }
     const { id: participantId } = await lookupRes.json();
+    try { localStorage.setItem("ibtss_email", email.toLowerCase().trim()); } catch {}
     const stampRes = await fetch("/api/stamp", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -63,7 +64,7 @@ export default function StampPage() {
   const remaining = result ? 3 - (result.stampsCollected ?? 0) : 0;
 
   return (
-    <main className="min-h-screen passport-cover-bg flex flex-col items-center justify-center px-4 py-10">
+    <main className="min-h-full flex flex-col items-center justify-center px-4 py-10" style={{ background: "white" }}>
 
       {/* Station header card */}
       <div style={{
@@ -84,7 +85,7 @@ export default function StampPage() {
         <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginBottom: 6 }}>
           Station {station.id} · {station.audience}
         </p>
-        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 700, color: "white", marginBottom: 10, lineHeight: 1.2 }}>
+        <h1 style={{ fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 22, fontWeight: 700, color: "white", marginBottom: 10, lineHeight: 1.2 }}>
           {station.title}
         </h1>
         <p style={{ fontSize: 13, color: "rgba(255,255,255,0.75)", lineHeight: 1.6 }}>{station.description}</p>
@@ -97,7 +98,7 @@ export default function StampPage() {
       {/* Action card */}
       {!result ? (
         <div style={{ background: "var(--cream)", borderRadius: 20, padding: "24px", width: "100%", maxWidth: 360, boxShadow: "0 8px 40px rgba(0,0,0,0.35)" }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: "var(--navy)", fontWeight: 700, marginBottom: 4 }}>
+          <h2 style={{ fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 18, color: "var(--navy)", fontWeight: 700, marginBottom: 4 }}>
             Collect your stamp
           </h2>
           <p style={{ fontSize: 13, color: "#888", marginBottom: 20 }}>Enter your email to record your visit.</p>
@@ -137,7 +138,7 @@ export default function StampPage() {
           <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(192,57,43,0.1)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
             <Lock size={28} color="#c0392b" strokeWidth={1.8}/>
           </div>
-          <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: "var(--navy)", fontWeight: 700, marginBottom: 8 }}>Not Found</p>
+          <p style={{ fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 18, color: "var(--navy)", fontWeight: 700, marginBottom: 8 }}>Not Found</p>
           <p style={{ fontSize: 13, color: "#888", marginBottom: 20, lineHeight: 1.5 }}>{result.error}</p>
           <button onClick={() => setResult(null)} style={{ color: sc.color, fontSize: 14, fontWeight: 600, background: "none", border: "none", cursor: "pointer", fontFamily: "inherit" }}>
             ← Try again
@@ -148,7 +149,7 @@ export default function StampPage() {
           <div style={{ width: 72, height: 72, borderRadius: "50%", background: sc.colorBg, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
             <CheckCircle2 size={36} color={sc.color} strokeWidth={1.8}/>
           </div>
-          <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: "var(--navy)", fontWeight: 700, marginBottom: 8 }}>Already Collected</p>
+          <p style={{ fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 20, color: "var(--navy)", fontWeight: 700, marginBottom: 8 }}>Already Collected</p>
           <p style={{ fontSize: 13, color: "#888", marginBottom: 20, lineHeight: 1.5 }}>You already have a stamp from this station.</p>
           <button onClick={() => router.push(`/passport/${result.participantId}`)}
             style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, width: "100%", background: sc.color, color: "white", border: "none", borderRadius: 14, padding: "14px 0", fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
@@ -160,7 +161,7 @@ export default function StampPage() {
           <div style={{ width: 72, height: 72, borderRadius: "50%", background: "rgba(201,168,76,0.15)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
             <span style={{ fontSize: 36 }}>🏆</span>
           </div>
-          <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: "var(--navy)", fontWeight: 700, marginBottom: 8 }}>Passport Complete!</p>
+          <p style={{ fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 20, color: "var(--navy)", fontWeight: 700, marginBottom: 8 }}>Passport Complete!</p>
           <p style={{ fontSize: 13, color: "#888", marginBottom: 20, lineHeight: 1.5 }}>
             You&apos;ve visited all three stations. Your completion passport is ready to share!
           </p>
@@ -174,7 +175,7 @@ export default function StampPage() {
           <div className="stamp-animate" style={{ width: 80, height: 80, borderRadius: "50%", background: `radial-gradient(circle at 30% 30%, ${sc.colorLight}, ${sc.color})`, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", boxShadow: `0 4px 20px ${sc.color}40` }}>
             <Icon size={34} color="white" strokeWidth={1.8}/>
           </div>
-          <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: "var(--navy)", fontWeight: 700, marginBottom: 8 }}>Stamp Collected!</p>
+          <p style={{ fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 20, color: "var(--navy)", fontWeight: 700, marginBottom: 8 }}>Stamp Collected!</p>
           <p style={{ fontSize: 13, color: "#888", marginBottom: 4, lineHeight: 1.5 }}>
             Station {stationId} complete. Resources sent to your email.
           </p>
