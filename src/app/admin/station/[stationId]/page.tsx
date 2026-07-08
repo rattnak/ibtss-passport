@@ -32,7 +32,7 @@ export default function AdminStationPage() {
   if (!station || !sc || !Icon) {
     return (
       <main className="min-h-screen passport-cover-bg flex items-center justify-center">
-        <p style={{ color: "rgba(201,168,76,0.7)", fontFamily: "'Playfair Display', serif", fontSize: 18 }}>Invalid station.</p>
+        <p style={{ color: "rgba(201,168,76,0.7)", fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 18 }}>Invalid station.</p>
       </main>
     );
   }
@@ -59,7 +59,7 @@ export default function AdminStationPage() {
         }}>
           <Icon size={32} color="white" strokeWidth={1.8}/>
         </div>
-        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, color: "white", marginBottom: 4, lineHeight: 1.2 }}>
+        <h1 style={{ fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 28, fontWeight: 700, color: "white", marginBottom: 4, lineHeight: 1.2 }}>
           {station.title}
         </h1>
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.5)" }}>{station.audience} Station</p>
