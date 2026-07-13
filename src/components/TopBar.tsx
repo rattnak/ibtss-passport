@@ -11,6 +11,8 @@ export default function TopBar() {
 
   if (pathname.startsWith("/admin")) return null;
 
+  const onMyPassport = pathname === "/my-passport";
+
   return (
     <header
       style={{
@@ -32,20 +34,29 @@ export default function TopBar() {
 
         {email ? (
           <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
-            <Link
-              href="/my-passport"
-              aria-label={`${name ?? email} — open my passport`}
-              style={{
-                display: "flex", alignItems: "center", gap: 6, minWidth: 0, minHeight: 40,
-                textDecoration: "none", padding: "6px 10px", borderRadius: 10,
-                background: "rgba(247,168,0,0.14)",
-              }}
-            >
-              <UserCircle2 size={17} color="var(--fhsu-gold)" aria-hidden="true" style={{ flexShrink: 0 }} />
-              <span className="topbar-name" style={{ color: "white", fontSize: 13, fontWeight: 700 }}>
-                {name ?? email}
+            {onMyPassport ? (
+              <span style={{ display: "flex", alignItems: "center", gap: 6, minWidth: 0, padding: "6px 10px" }}>
+                <UserCircle2 size={17} color="var(--fhsu-gold)" aria-hidden="true" style={{ flexShrink: 0 }} />
+                <span className="topbar-name" style={{ color: "white", fontSize: 13, fontWeight: 700 }}>
+                  {name ?? email}
+                </span>
               </span>
-            </Link>
+            ) : (
+              <Link
+                href="/my-passport"
+                aria-label={`${name ?? email} — open my passport`}
+                style={{
+                  display: "flex", alignItems: "center", gap: 6, minWidth: 0, minHeight: 40,
+                  textDecoration: "none", padding: "6px 10px", borderRadius: 10,
+                  background: "rgba(247,168,0,0.14)",
+                }}
+              >
+                <UserCircle2 size={17} color="var(--fhsu-gold)" aria-hidden="true" style={{ flexShrink: 0 }} />
+                <span className="topbar-name" style={{ color: "white", fontSize: 13, fontWeight: 700 }}>
+                  {name ?? email}
+                </span>
+              </Link>
+            )}
             <button
               onClick={signOut}
               aria-label={`Sign out ${name ?? email}`}
@@ -60,7 +71,7 @@ export default function TopBar() {
               <LogOut size={14} aria-hidden="true" />
             </button>
           </div>
-        ) : (
+        ) : onMyPassport ? null : (
           <Link
             href="/my-passport"
             style={{
