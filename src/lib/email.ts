@@ -38,7 +38,7 @@ export async function sendStationResources(
 }
 
 export async function sendAdminMagicLink(email: string, verifyUrl: string) {
-  await resend.emails.send({
+  return resend.emails.send({
     from: FROM,
     to: email,
     subject: "Your IBTSS admin sign-in link",
