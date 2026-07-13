@@ -143,6 +143,31 @@ src/
     └── email.ts      # Resend email templates
 ```
 
+
+---
+
+## Post-Workshop Resources — Time Gate & Preview Bypass
+
+The **Post-Workshop Resources** section (`/toolkit/post-workshop`) is locked until the
+session ends: **Aug 5, 2026, 5:00 PM ICT** (defined as `WORKSHOP_END` in `src/lib/agenda.ts`).
+Before that time, the Toolkit page shows a locked card and the page itself shows a
+"Not yet" screen.
+
+### Preview bypass (facilitators)
+
+To preview the section before the unlock time, append `?preview=1` to the URL:
+
+```
+http://localhost:3000/toolkit/post-workshop?preview=1
+https://<your-deployment>/toolkit/post-workshop?preview=1
+```
+
+Notes:
+- The gate is a client-side courtesy curtain, not a security control — the content
+  ships with the app either way.
+- To unlock for everyone early (e.g., during the closing walkthrough), edit the
+  single `WORKSHOP_END` timestamp in `src/lib/agenda.ts` and redeploy.
+
 ---
 
 Maintained by [Chanrattnak Mong](https://github.com/rattnak) — FHSU Technology and Innovation in Learning and Teaching (TILT)
