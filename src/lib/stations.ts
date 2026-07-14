@@ -1,6 +1,10 @@
 export type Station = {
   id: 1 | 2 | 3;
   title: string;
+  /** Short label shown on the passport stamp and station badges, e.g. "Faculty · NotebookLM". */
+  stampLabel: string;
+  /** What participants leave the station with, shown on the passport/toolkit. */
+  takeHome: string;
   audience: string;
   tools: string[];
   description: string;
@@ -18,7 +22,9 @@ export type Resource = {
 export const STATIONS: Station[] = [
   {
     id: 1,
-    title: "NotebookLM for Faculty",
+    title: "Station 1 — Faculty: NotebookLM",
+    stampLabel: "Faculty · NotebookLM",
+    takeHome: "Starter notebook + Course Integration worksheet",
     audience: "Faculty",
     tools: ["NotebookLM"],
     description:
@@ -40,29 +46,30 @@ export const STATIONS: Station[] = [
   },
   {
     id: 2,
-    title: "gethouston.ai for Administrators",
+    title: "Station 2 — Administrators & Staff: Claude",
+    stampLabel: "Admin · Claude",
+    takeHome: "Draft AI use policy + Human Review Checklist",
     audience: "Administrators & Staff",
-    tools: ["gethouston.ai"],
+    tools: ["Claude"],
     description:
-      "Build low-to-no-code AI agent workflows for scheduling, reporting, and recurring office tasks. Automate the repetitive and focus on what matters.",
+      "Draft AI use policy language and sketch human-in-the-loop workflows for scheduling, reporting, and recurring office tasks using Claude. Automate the repetitive and focus on what matters, with a clear human review point.",
     color: "from-emerald-600 to-emerald-800",
     accent: "emerald",
     emoji: "⚙️",
     resources: [
-      { title: "gethouston.ai Platform", url: "https://gethouston.ai" },
-      {
-        title: "AI Automation Starter Guide",
-        url: "https://gethouston.ai/docs",
-      },
-      {
-        title: "No-Code AI Workflow Templates",
-        url: "https://gethouston.ai/templates",
-      },
+      { title: "Claude by Anthropic", url: "https://claude.ai" },
+      // TODO: replace with final URL once published
+      { title: "Station 2 policy prompt", url: "#" },
+      // TODO: replace with final URL once published
+      { title: "Human Review Checklist (PDF)", url: "#" },
+      { title: "Gemini (backup tool)", url: "https://gemini.google.com" },
     ],
   },
   {
     id: 3,
-    title: "Claude + Perplexity for Students",
+    title: "Station 3 — Students: Claude + Perplexity",
+    stampLabel: "Students · Claude + Perplexity",
+    takeHome: "Revised prompt + two-tool comparison reflection",
     audience: "Students",
     tools: ["Claude", "Perplexity"],
     description:
@@ -73,6 +80,8 @@ export const STATIONS: Station[] = [
     resources: [
       { title: "Claude by Anthropic", url: "https://claude.ai" },
       { title: "Perplexity AI", url: "https://www.perplexity.ai" },
+      // TODO: replace with final URL once published
+      { title: "Station 3 prompt handout (PDF)", url: "#" },
       {
         title: "Responsible AI Use Guide (FHSU)",
         url: "https://www.fhsu.edu",
