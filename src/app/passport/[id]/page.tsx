@@ -25,7 +25,7 @@ const STATION_COLORS = [
   { color: "#6B4FA0", colorLight: "#8B6EC0" },
 ];
 
-const BASE_POST = `I just completed all 3 AI tool stations at the IBTSS 2026 Pre-Conference Workshop — exploring NotebookLM, gethouston.ai, Claude, and Perplexity for higher education! #IBTSS2026 #AIinEducation #FHSU`;
+const BASE_POST = `I completed all three AI tool stations at the IBTSS 2026 Pre-Conference Workshop — AI in Higher Education: From Challenge to Opportunity (Fort Hays State University × American University of Phnom Penh). #IBTSS2026 #AIinEducation #FHSU`;
 
 export default function PassportPage() {
   const { id } = useParams<{ id: string }>();
@@ -179,12 +179,12 @@ export default function PassportPage() {
             <div style={{ flex: 1 }}>
               <p style={{ fontSize: 15, fontWeight: 700, color: "var(--fhsu-black)", marginBottom: 4 }}>
                 {progress.is_complete
-                  ? "All stations complete!"
+                  ? "All three lenses collected!"
                   : `${3 - completed.length} station${3 - completed.length !== 1 ? "s" : ""} to go`}
               </p>
               <p style={{ fontSize: 12.5, color: "#767676", lineHeight: 1.55 }}>
                 {progress.is_complete
-                  ? "Share your achievement below."
+                  ? "Check the Toolkit tab for everything you used today."
                   : "Scan the QR code at each station to collect its stamp."}
               </p>
               {!progress.is_complete && (
@@ -224,7 +224,7 @@ export default function PassportPage() {
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 1, padding: 4 }}>
                         <Icon size={18} strokeWidth={2} aria-hidden="true" />
                         <span style={{ fontSize: 7.5, fontWeight: 800, lineHeight: 1.2, maxWidth: 60, textTransform: "uppercase", letterSpacing: 0.4 }}>
-                          {station.title.split(" for ")[0]}
+                          {station.stampLabel}
                         </span>
                         <span style={{ fontSize: 6.5, opacity: 0.85, letterSpacing: 0.8 }}>IBTSS 2026</span>
                       </div>
@@ -245,7 +245,7 @@ export default function PassportPage() {
                     </div>
                   )}
                   <p style={{ fontSize: 11.5, fontWeight: 700, color: "var(--fhsu-black)", lineHeight: 1.25 }}>
-                    {station.title.split(" for ")[0]}
+                    {station.stampLabel}
                   </p>
                   <p style={{ fontSize: 9.5, color: "#999", marginTop: 2 }}>{station.audience}</p>
                   <p style={{ marginTop: 6 }}>
