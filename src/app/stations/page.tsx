@@ -113,11 +113,11 @@ export default function StationsPage() {
           {email ? <ScanLine size={20} strokeWidth={2.2} aria-hidden="true" /> : <LogIn size={18} strokeWidth={2.2} aria-hidden="true" />}
           {email ? "Scan QR to Check In" : "Sign In to Check In"}
         </button>
-        {!email && (
-          <p style={{ fontSize: 12, color: "#767676", textAlign: "center", marginTop: 8 }}>
-            Sign in with your passport email first, then scan the station&apos;s QR code.
-          </p>
-        )}
+        <p style={{ fontSize: 12, color: "#767676", textAlign: "center", marginTop: 8 }}>
+          {email
+            ? "Scan as you finish each station — collect all three."
+            : <>Sign in with your passport email first, then scan the station&apos;s QR code.</>}
+        </p>
 
         {/* Result banner */}
         {stamping && (
@@ -139,10 +139,10 @@ export default function StationsPage() {
                 <div style={{ flex: 1 }}>
                   <p style={{ fontSize: 14.5, fontWeight: 700, color: result.isComplete ? "var(--fhsu-gold)" : "#14532D" }}>
                     {result.isComplete
-                      ? "Passport complete — all 3 stations!"
+                      ? "All three lenses collected!"
                       : result.alreadyStamped
-                        ? `Already stamped: ${resultStation?.title.split(" for ")[0]}`
-                        : `Stamp collected: ${resultStation?.title.split(" for ")[0]}`}
+                        ? `Already stamped: ${resultStation?.stampLabel}`
+                        : `Stamp collected: ${resultStation?.stampLabel}`}
                   </p>
                   <p style={{ fontSize: 12, color: result.isComplete ? "rgba(255,255,255,0.75)" : "#3F6212", marginTop: 2 }}>
                     {result.isComplete
@@ -209,6 +209,13 @@ export default function StationsPage() {
                   <div className="slide-up" style={{ padding: "0 16px 16px 68px" }}>
                     <p style={{ fontSize: 13, color: "#555", lineHeight: 1.6, marginBottom: 14 }}>
                       {station.description}
+                    </p>
+
+                    <p style={{
+                      fontSize: 12, color: sc.color, fontWeight: 700, lineHeight: 1.5,
+                      background: sc.bg, borderRadius: 8, padding: "8px 12px", marginBottom: 14,
+                    }}>
+                      Take home: {station.takeHome}
                     </p>
 
                     <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase", color: "#767676", marginBottom: 8 }}>
