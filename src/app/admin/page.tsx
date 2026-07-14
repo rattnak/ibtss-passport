@@ -1,52 +1,100 @@
+"use client";
+
 import Link from "next/link";
+import { BookOpen, Settings2, Search, ArrowRight, LogOut, ShieldCheck } from "lucide-react";
 import { STATIONS } from "@/lib/stations";
 
+const STATION_ICONS = [BookOpen, Settings2, Search];
+const STATION_COLORS = [
+  { color: "#1E7167", bg: "rgba(42,157,143,0.12)" },
+  { color: "#A34A28", bg: "rgba(194,96,58,0.12)" },
+  { color: "#5B4390", bg: "rgba(107,79,160,0.12)" },
+];
+
 export default function AdminPage() {
-  const gradients: Record<number, string> = {
-    1: "from-blue-600 to-blue-800",
-    2: "from-emerald-600 to-emerald-800",
-    3: "from-violet-600 to-violet-800",
-  };
-
   return (
-    <main className="min-h-screen bg-slate-900 flex flex-col items-center justify-center px-4 py-12">
-      <div className="text-center mb-10">
-        <p className="text-amber-400 text-sm font-semibold tracking-widest uppercase mb-2">
-          Admin
-        </p>
-        <h1 className="text-3xl font-bold text-white mb-2">Station QR Codes</h1>
-        <p className="text-slate-400 text-sm">
-          Open a station page and display it on the screen, or print it as a poster.
-        </p>
-      </div>
+    <main className="min-h-full flex flex-col items-center px-4 py-10" style={{ background: "white" }}>
+      <div className="page-container">
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-3xl">
-        {STATIONS.map((station) => (
-          <Link
-            key={station.id}
-            href={`/admin/station/${station.id}`}
-            className={`bg-gradient-to-br ${gradients[station.id]} rounded-2xl p-6 text-center hover:scale-105 transition-transform shadow-lg`}
-          >
-            <div className="text-5xl mb-3">{station.emoji}</div>
-            <p className="text-white/60 text-xs font-semibold uppercase tracking-wider mb-1">
-              Station {station.id} · {station.audience}
-            </p>
-            <p className="text-white font-bold mb-3">{station.title}</p>
-            <span className="bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full">
-              Open QR Page →
-            </span>
-          </Link>
-        ))}
-      </div>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24, gap: 12, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <ShieldCheck size={20} color="var(--gold-text)" strokeWidth={2} aria-hidden="true" />
+            <div>
+              <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: "var(--gold-text)" }}>Admin</p>
+              <h1 style={{ fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 22, fontWeight: 700, color: "var(--fhsu-black)" }}>
+                Station QR Codes
+              </h1>
+            </div>
+          </div>
+          <form action="/api/admin/logout" method="POST">
+            <button
+              type="submit"
+              style={{
+                display: "flex", alignItems: "center", gap: 6,
+                background: "white", color: "#666", border: "1px solid #DDD",
+                borderRadius: 10, padding: "9px 14px", minHeight: 40,
+                fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+              }}
+            >
+              <LogOut size={14} aria-hidden="true" /> Sign out
+            </button>
+          </form>
+        </div>
 
-      <div className="mt-10 bg-white/5 border border-white/10 rounded-2xl p-6 w-full max-w-3xl">
-        <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3">Setup checklist</p>
-        <ul className="text-slate-300 text-sm space-y-2">
-          <li>✓ Open each station page on a tablet or monitor at the station</li>
-          <li>✓ Participants scan the QR code with their phone camera</li>
-          <li>✓ They enter their email to collect the stamp</li>
-          <li>✓ Resources are auto-emailed; completion triggers a final email + passport link</li>
-        </ul>
+        <p style={{ fontSize: 13.5, color: "#555", lineHeight: 1.6, marginBottom: 24 }}>
+          Open a station page and display it on a tablet or monitor, or print it as a poster for that station.
+        </p>
+
+        <div className="card-grid" style={{ marginBottom: 28 }}>
+          {STATIONS.map((station, i) => {
+            const Icon = STATION_ICONS[i];
+            const sc = STATION_COLORS[i];
+            return (
+              <Link
+                key={station.id}
+                href={`/admin/station/${station.id}`}
+                style={{
+                  display: "flex", alignItems: "center", gap: 12,
+                  background: "white",
+                  border: "1px solid #E8E8E8",
+                  borderLeft: `4px solid ${sc.color}`,
+                  borderRadius: 14, padding: "16px", minHeight: 64, textDecoration: "none",
+                  boxShadow: "0 1px 6px rgba(0,0,0,0.04)",
+                }}
+              >
+                <div style={{ width: 40, height: 40, borderRadius: "50%", background: sc.bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <Icon size={19} color={sc.color} strokeWidth={2} aria-hidden="true" />
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontSize: 10, color: "#767676", textTransform: "uppercase", letterSpacing: 1, marginBottom: 2, fontWeight: 700 }}>
+                    Station {station.id} · {station.audience}
+                  </p>
+                  <p style={{ fontSize: 14.5, color: "var(--fhsu-black)", fontWeight: 700, lineHeight: 1.25 }}>{station.title}</p>
+                </div>
+                <ArrowRight size={16} color="#999" strokeWidth={2} aria-hidden="true" style={{ flexShrink: 0 }} />
+              </Link>
+            );
+          })}
+        </div>
+
+        <div style={{ background: "#FAFAFA", border: "1px solid #ECECEC", borderRadius: 14, padding: "18px 20px" }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase", color: "#999", marginBottom: 10 }}>
+            Setup Checklist
+          </p>
+          <ul style={{ display: "flex", flexDirection: "column", gap: 8, listStyle: "none", padding: 0, margin: 0 }}>
+            {[
+              "Open each station page on a tablet or monitor at the station",
+              "Participants scan the QR code with their phone camera",
+              "They sign in (or register) to collect the stamp",
+              "Resources are auto-emailed; completion triggers a final email + passport link",
+            ].map((item) => (
+              <li key={item} style={{ display: "flex", gap: 10, fontSize: 13, color: "#555", lineHeight: 1.5 }}>
+                <span aria-hidden="true" style={{ color: "var(--gold-text)", fontWeight: 700 }}>✓</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </main>
   );

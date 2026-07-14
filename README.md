@@ -48,6 +48,7 @@ Participants register, visit three AI workshop stations, scan QR codes to collec
 - Facilitators open `/admin/station/[1|2|3]` on a tablet or laptop at each station
 - Shows the station's QR code on a styled card, ready to be scanned
 - Includes a Print button for physical backup copies
+- **Access-restricted** — see [Admin Authentication](#admin-authentication) below
 
 ---
 
@@ -77,6 +78,39 @@ Participants register, visit three AI workshop stations, scan QR codes to collec
 
 ---
 
+## Admin Authentication
+
+Station QR code pages (`/admin`, `/admin/station/[1|2|3]`) are restricted to
+authorized facilitators via email + magic link — no shared password, no
+third-party auth provider.
+
+**How it works:**
+1. Visit `/admin` (or any `/admin/*` page) while signed out → redirected to `/admin/login`
+2. Enter your email → if it's on the allowlist, a one-time sign-in link is emailed via Resend (expires in 15 minutes)
+3. Clicking the link sets an `httpOnly` session cookie (valid 8 hours) and redirects into `/admin`
+4. `src/middleware.ts` guards every `/admin/*` route (except the login/verify routes themselves) and redirects unauthenticated requests back to `/admin/login`
+
+**Who's authorized:** set `ADMIN_ALLOWED_EMAILS` as a comma-separated list, e.g.:
+
+```env
+ADMIN_ALLOWED_EMAILS=jeni.mcray@fhsu.edu,magdalene.moy@fhsu.edu
+```
+
+**Secret:** `ADMIN_TOKEN_SECRET` signs the magic-link and session tokens (HMAC-SHA256, no extra dependency, no database table required). Set it to a long random string — e.g. generate one with:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"
+```
+
+If unset, it falls back to `SUPABASE_SERVICE_ROLE_KEY`, but setting a dedicated secret is recommended.
+
+**Notes:**
+- The request-link endpoint returns the same response whether or not the email is on the allowlist, so it can't be used to enumerate authorized facilitators.
+- Links are valid for any use within their 15-minute window (not single-use/consumed on first click) — acceptable for this low-stakes, short-lived, allowlisted use case.
+- Sign out from `/admin` clears the session cookie via `POST /api/admin/logout`.
+
+---
+
 ## Local Development
 
 ```bash
@@ -97,6 +131,10 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 RESEND_API_KEY=
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
+
+# Admin auth (station QR pages) — see "Admin Authentication" below
+ADMIN_ALLOWED_EMAILS=
+ADMIN_TOKEN_SECRET=
 ```
 
 ### Database Setup
