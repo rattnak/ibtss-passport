@@ -79,12 +79,12 @@ export const AGENDA: AgendaSession[] = [
   {
     id: "section-2",
     start: "2:20",
-    end: "3:30",
+    end: "3:20",
     label: "Section 2",
     title: "AI Tool Rotation Stations",
     format: "Hands-On Rotations · 3 × 20 min",
     description:
-      "Rotate through three hands-on stations: NotebookLM for faculty, gethouston.ai for administrators & staff, and Claude + Perplexity for students. Check in at each station to stamp your AI Learning Passport.",
+      "Rotate through three hands-on stations: Claude + Perplexity for faculty, Claude Cowork for administrators & staff, and NotebookLM for students. Check in at each station to stamp your AI Learning Passport.",
     links: [
       { title: "Station Check-In & Passport", href: "/stations", source: "AI Learning Passport", interactive: true },
       { title: "AI Tools for Faculty, Students & Administrators", href: "/toolkit/ai-tools", source: "Toolkit · Page 4 / Appendix · Pages 40–47" },
@@ -92,8 +92,8 @@ export const AGENDA: AgendaSession[] = [
   },
   {
     id: "break-2",
-    start: "3:30",
-    end: "3:40",
+    start: "3:20",
+    end: "3:30",
     label: "Break",
     title: "Break",
     format: "Informal",
@@ -103,8 +103,8 @@ export const AGENDA: AgendaSession[] = [
   },
   {
     id: "section-3",
-    start: "3:40",
-    end: "4:30",
+    start: "3:30",
+    end: "4:00",
     label: "Section 3",
     title: "Case Studies & Strategic Reflection",
     format: "Case Analysis + Worksheets",
@@ -117,7 +117,7 @@ export const AGENDA: AgendaSession[] = [
   },
   {
     id: "closing",
-    start: "4:30",
+    start: "4:00",
     end: "5:00",
     label: "Closing",
     title: "Toolkit Walkthrough + Personal AI Integration Plan",
