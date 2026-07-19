@@ -110,10 +110,10 @@ export const TOOLKIT_SECTIONS: ToolkitSection[] = [
     blocks: [
       { kind: "heading", text: "Today's Station Tools" },
       { kind: "links", links: [
-        { title: "NotebookLM (Google)", url: "https://notebooklm.google.com", note: "Station 1 · Faculty — ground AI in YOUR course materials; summaries, study guides, OER support" },
-        { title: "gethouston.ai", url: "https://gethouston.ai", note: "Station 2 · Administrators & Staff — low-to-no-code AI agent workflows for office tasks" },
-        { title: "Claude (Anthropic)", url: "https://claude.ai", note: "Station 3 · Students — prompt refinement and output evaluation" },
-        { title: "Perplexity", url: "https://www.perplexity.ai", note: "Station 3 · Students — source-backed research and claim-checking" },
+        { title: "Claude (Anthropic)", url: "https://claude.ai", note: "Station 1 · Faculty — prompt refinement and output evaluation" },
+        { title: "Perplexity", url: "https://www.perplexity.ai", note: "Station 1 · Faculty — source-backed research and claim-checking" },
+        { title: "Claude Cowork", url: "https://www.anthropic.com/product/claude-cowork", note: "Station 2 · Administrators & Staff — delegate real office work: files, connected apps, multi-step tasks" },
+        { title: "NotebookLM (Google)", url: "https://notebooklm.google.com", note: "Station 3 · Students — ground AI in YOUR course materials; summaries, study guides, source-backed learning" },
       ]},
       { kind: "heading", text: "For Faculty" },
       { kind: "links", links: [
@@ -340,10 +340,10 @@ TOOLKIT_SECTIONS.push({
   blocks: [
     { kind: "heading", text: "Keep Exploring Today's Tools" },
     { kind: "links", links: [
-      { title: "NotebookLM", url: "https://notebooklm.google.com", note: "Build a notebook from your own course materials this week" },
-      { title: "gethouston.ai", url: "https://gethouston.ai", note: "Sketch one agent workflow: trigger → information source → action → human review" },
-      { title: "Claude", url: "https://claude.ai", note: "Practice the prompt-refinement exercise from Station 3 on your own task" },
+      { title: "Claude", url: "https://claude.ai", note: "Practice the Station 1 prompt-refinement exercise on your own task" },
       { title: "Perplexity", url: "https://www.perplexity.ai", note: "Run the same query you gave Claude and compare the sourced answers" },
+      { title: "Claude Cowork", url: "https://www.anthropic.com/product/claude-cowork", note: "Delegate one real recurring task: trigger → information source → action → human review" },
+      { title: "NotebookLM", url: "https://notebooklm.google.com", note: "Build a notebook from your own course materials this week" },
     ]},
     { kind: "heading", text: "Continue Your Learning" },
     { kind: "links", links: [

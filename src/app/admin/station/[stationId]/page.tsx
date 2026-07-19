@@ -89,8 +89,8 @@ export default function AdminStationPage() {
             Station Resources
           </p>
           <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: 8 }}>
-            {station.resources.map((r) => (
-              <li key={r.url}>
+            {station.resources.map((r, ri) => (
+              <li key={`${station.id}-${ri}-${r.title}`}>
                 <a href={r.url} target="_blank" rel="noopener noreferrer"
                   style={{ color: "var(--gold-text)", fontSize: 13, fontWeight: 600, textDecoration: "none" }}>
                   → {r.title}

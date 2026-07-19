@@ -222,8 +222,8 @@ export default function StationsPage() {
                       Station Resources
                     </p>
                     <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 14 }}>
-                      {station.resources.map((r) => (
-                        <a key={r.url} href={r.url} target="_blank" rel="noopener noreferrer" style={{
+                      {station.resources.map((r, ri) => (
+                        <a key={`${station.id}-${ri}-${r.title}`} href={r.url} target="_blank" rel="noopener noreferrer" style={{
                           display: "flex", alignItems: "center", gap: 8,
                           fontSize: 13, color: "var(--fhsu-black)", fontWeight: 500, textDecoration: "none",
                           background: "#FAFAFA", border: "1px solid #EEE", borderRadius: 8, padding: "10px 12px", minHeight: 44,
