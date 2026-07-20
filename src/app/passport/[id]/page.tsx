@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
   BookOpen, Settings2, Search, Trophy, CheckCircle2, Circle,
   Share2, Copy, ExternalLink, Lock, ArrowRight,
 } from "lucide-react";
 import { STATIONS } from "@/lib/stations";
 import CredlyBadgeCard from "@/components/CredlyBadgeCard";
+import { useSession } from "@/lib/session";
 
 type Progress = {
   id: string;
@@ -29,7 +30,18 @@ const STATION_COLORS = [
 const BASE_POST = `I completed all three AI tool stations at the IBTSS 2026 Pre-Conference Workshop — AI in Higher Education: From Challenge to Opportunity (Fort Hays State University × American University of Phnom Penh). #IBTSS2026 #AIinEducation #FHSU`;
 
 export default function PassportPage() {
+  return (
+    <Suspense fallback={null}>
+      <PassportPageContent />
+    </Suspense>
+  );
+}
+
+function PassportPageContent() {
   const { id } = useParams<{ id: string }>();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { participantId, signIn } = useSession();
   const [progress, setProgress] = useState<Progress | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -37,6 +49,8 @@ export default function PassportPage() {
   const [copied, setCopied] = useState(false);
   const [captionCopied, setCaptionCopied] = useState(false);
   const [newlyStamped] = useState<number | null>(null);
+  const wasOwner = useRef(false);
+  const signedInFromVerify = useRef(false);
 
   useEffect(() => {
     fetch(`/api/passport/${id}`)
@@ -45,6 +59,27 @@ export default function PassportPage() {
       .catch(() => setError("Passport not found."))
       .finally(() => setLoading(false));
   }, [id]);
+
+  // The email-verification link redirects here straight from the server
+  // (no client-side sign-in happens along the way), so without this the
+  // navbar and every other page keep treating you as signed out even
+  // though this page itself shows your data by URL id.
+  useEffect(() => {
+    if (signedInFromVerify.current || searchParams.get("justVerified") !== "1" || !progress?.email) return;
+    signedInFromVerify.current = true;
+    signIn(progress.email);
+    const url = new URL(window.location.href);
+    url.searchParams.delete("justVerified");
+    window.history.replaceState({}, "", url);
+  }, [searchParams, progress, signIn]);
+
+  // If you sign out while viewing your own passport, leave the page —
+  // the page itself stays public (LinkedIn share links point here), but
+  // seeing your own stamps after signing out reads as sign-out not working.
+  useEffect(() => {
+    if (participantId === id) wasOwner.current = true;
+    else if (wasOwner.current && !participantId) router.replace("/");
+  }, [participantId, id, router]);
 
   if (loading) {
     return (

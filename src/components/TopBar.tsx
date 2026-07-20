@@ -24,7 +24,7 @@ export default function TopBar() {
     // toolkit worksheets, station check-in) — /passport/[id] in particular
     // fetched its data once on mount and would otherwise keep showing the
     // signed-out user's name/stamps with no session backing it.
-    router.push("/");
+    router.replace("/");
   }
 
   if (pathname.startsWith("/admin")) return null;
