@@ -35,6 +35,7 @@ export default function PassportPage() {
   const [error, setError] = useState("");
   const [reflection, setReflection] = useState("");
   const [copied, setCopied] = useState(false);
+  const [captionCopied, setCaptionCopied] = useState(false);
   const [newlyStamped] = useState<number | null>(null);
 
   useEffect(() => {
@@ -71,8 +72,21 @@ export default function PassportPage() {
   const passportUrl = typeof window !== "undefined" ? window.location.href : "";
 
   function buildLinkedInUrl() {
-    const text = reflection.trim() ? `${reflection.trim()}\n\n${BASE_POST}` : BASE_POST;
-    return `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(passportUrl)}&title=${encodeURIComponent("IBTSS 2026 AI Learning Passport")}&summary=${encodeURIComponent(text)}`;
+    // LinkedIn's share dialog no longer accepts pre-filled post text (title/summary
+    // params are ignored) — it only takes the URL and pulls its preview card from
+    // that page's Open Graph tags. The caption below is meant to be copied into
+    // the post LinkedIn opens, not auto-inserted.
+    return `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(passportUrl)}`;
+  }
+
+  function fullCaption() {
+    return reflection.trim() ? `${reflection.trim()}\n\n${BASE_POST}` : BASE_POST;
+  }
+
+  async function copyCaption() {
+    await navigator.clipboard.writeText(fullCaption());
+    setCaptionCopied(true);
+    setTimeout(() => setCaptionCopied(false), 2000);
   }
 
   async function copyLink() {
@@ -311,11 +325,29 @@ export default function PassportPage() {
                 />
               </div>
               <div style={{ background: "#FAFAFA", border: "1px solid #ECECEC", borderRadius: 12, padding: "12px 14px" }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>Post preview</p>
-                <p style={{ fontSize: 12.5, color: "#555", lineHeight: 1.6, whiteSpace: "pre-wrap" }}>
-                  {reflection.trim() ? `${reflection.trim()}\n\n` : ""}{BASE_POST}
+                <p style={{ fontSize: 10, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>
+                  Caption — copy this into your post
                 </p>
+                <p style={{ fontSize: 12.5, color: "#555", lineHeight: 1.6, whiteSpace: "pre-wrap", marginBottom: 10 }}>
+                  {fullCaption()}
+                </p>
+                <button
+                  onClick={copyCaption}
+                  style={{
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                    width: "100%", background: "white", color: "var(--fhsu-black)",
+                    border: "1.5px solid #CCCCCC", borderRadius: 10,
+                    padding: "10px 0", minHeight: 40, fontSize: 12.5, fontWeight: 600,
+                    cursor: "pointer", fontFamily: "inherit",
+                  }}
+                >
+                  <Copy size={14} strokeWidth={2} aria-hidden="true" />
+                  {captionCopied ? "Caption copied!" : "Copy caption"}
+                </button>
               </div>
+              <p style={{ fontSize: 11.5, color: "#999", lineHeight: 1.5, margin: "-6px 0 0" }}>
+                LinkedIn no longer accepts pre-filled post text — copy the caption above, then paste it into the post LinkedIn opens.
+              </p>
 
               {/* Actions */}
               <a
@@ -329,7 +361,7 @@ export default function PassportPage() {
                 <svg style={{ width: 20, height: 20, flexShrink: 0 }} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                 </svg>
-                Share on LinkedIn
+                Open LinkedIn to Post
                 <ExternalLink size={14} strokeWidth={2} style={{ opacity: 0.7 }} aria-hidden="true" />
               </a>
               <button
