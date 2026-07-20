@@ -124,7 +124,7 @@ export default function PassportPage() {
                   </div>
                   <div>
                     <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 8.5, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 2 }}>Issued by</p>
-                    <p style={{ color: "white", fontSize: 11.5, fontWeight: 600 }}>FHSU · AUPP</p>
+                    <p style={{ color: "white", fontSize: 11.5, fontWeight: 600 }}>FHSU</p>
                   </div>
                   <div>
                     <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 8.5, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 2 }}>Status</p>

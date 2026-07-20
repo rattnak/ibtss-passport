@@ -213,11 +213,7 @@ export default function MyPassportPage() {
                   placeholder="Jane Smith"
                   style={regError ? errorInputStyle : inputStyle}
                   aria-invalid={!!regError}
-                  aria-describedby="reg-name-hint"
                 />
-                <p id="reg-name-hint" style={{ fontSize: 11, color: "#999", marginTop: 5 }}>
-                  Enter your first name first — it&apos;s shown on your passport and in the app.
-                </p>
               </div>
               <div>
                 <label htmlFor="reg-email" style={{ display: "block", fontSize: 12, fontWeight: 600, color: "var(--fhsu-black)", marginBottom: 6 }}>
