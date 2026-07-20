@@ -35,7 +35,7 @@ export const STATIONS: Station[] = [
     resources: [
       { title: "Claude by Anthropic", url: "https://claude.ai" },
       { title: "Perplexity AI", url: "https://www.perplexity.ai" },
-      { title: "Responsible AI Use Guide (FHSU)", url: "https://www.fhsu.edu" },
+      { title: "Responsible AI Use Guide (FHSU)", url: "https://www.fhsu.edu/ai/images/ai-use.pdf" },
     ],
   },
   {
