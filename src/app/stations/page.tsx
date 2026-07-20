@@ -74,7 +74,7 @@ export default function StationsPage() {
   const resultStation = result && result.stationId ? getStation(result.stationId) : null;
 
   return (
-    <main className="min-h-full flex flex-col items-center px-4 py-8" style={{ background: "white" }}>
+    <main className="min-h-full flex flex-col items-center px-4 pt-4 pb-8" style={{ background: "white" }}>
       <div className="page-container">
 
         <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "#666", fontSize: 13, textDecoration: "none", marginBottom: 18, minHeight: 44 }}>
@@ -221,7 +221,7 @@ export default function StationsPage() {
                     <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase", color: "#767676", marginBottom: 8 }}>
                       Station Resources
                     </p>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 14 }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                       {station.resources.map((r, ri) => (
                         <a key={`${station.id}-${ri}-${r.title}`} href={r.url} target="_blank" rel="noopener noreferrer" style={{
                           display: "flex", alignItems: "center", gap: 8,
@@ -233,20 +233,6 @@ export default function StationsPage() {
                         </a>
                       ))}
                     </div>
-
-                    <button
-                      onClick={() => stamp(station.id)}
-                      disabled={stamping}
-                      style={{
-                        display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                        width: "100%", background: sc.color, color: "white", border: "none",
-                        borderRadius: 12, padding: "13px 0", minHeight: 48, fontSize: 14, fontWeight: 700,
-                        cursor: stamping ? "not-allowed" : "pointer", fontFamily: "inherit",
-                      }}
-                    >
-                      <Stamp size={16} strokeWidth={2} aria-hidden="true" />
-                      {email ? "Check In at This Station" : "Sign In to Check In"}
-                    </button>
                   </div>
                 )}
               </div>

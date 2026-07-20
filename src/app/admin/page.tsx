@@ -13,7 +13,7 @@ const STATION_COLORS = [
 
 export default function AdminPage() {
   return (
-    <main className="min-h-full flex flex-col items-center px-4 py-10" style={{ background: "white" }}>
+    <main className="min-h-full flex flex-col items-center px-4 pt-4 pb-10" style={{ background: "white" }}>
       <div className="page-container">
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24, gap: 12, flexWrap: "wrap" }}>

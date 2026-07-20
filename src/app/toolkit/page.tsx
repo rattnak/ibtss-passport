@@ -37,7 +37,7 @@ export default function ToolkitIndexPage() {
   );
 
   return (
-    <main className="min-h-full flex flex-col items-center px-4 py-8" style={{ background: "white" }}>
+    <main className="min-h-full flex flex-col items-center px-4 pt-4 pb-8" style={{ background: "white" }}>
       <div className="page-container">
         <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "#666", fontSize: 13, textDecoration: "none", marginBottom: 18, minHeight: 44 }}>
           <ChevronLeft size={15} strokeWidth={2} aria-hidden="true" /> Back to Agenda
