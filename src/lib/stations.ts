@@ -58,20 +58,18 @@ export const STATIONS: Station[] = [
   },
   {
     id: 3,
-    title: "Station 3 — Students: NotebookLM",
-    stampLabel: "Students · NotebookLM",
+    title: "Station 3 — Students: Gemini Notebook",
+    stampLabel: "Students · Gemini Notebook",
     takeHome: "Starter notebook + Course Integration worksheet",
     audience: "Students",
-    tools: ["NotebookLM"],
+    tools: ["Gemini Notebook"],
     description:
-      "Organize course materials, build study guides, and curate source-grounded resource collections using Google's NotebookLM — a hands-on introduction to AI-assisted, source-backed learning.",
+      "Organize course materials, build study guides, and curate source-grounded resource collections using Google's Gemini Notebook (formerly NotebookLM) — a hands-on introduction to AI-assisted, source-backed learning.",
     color: "from-violet-600 to-violet-800",
     accent: "violet",
     emoji: "🔍",
     resources: [
-      { title: "NotebookLM", url: "https://notebooklm.google.com" },
-      { title: "OER Commons", url: "https://www.oercommons.org" },
-      { title: "FHSU Library OER Resources", url: "https://library.fhsu.edu" },
+      { title: "Gemini Notebook (formerly NotebookLM)", url: "https://notebooklm.google.com" },
     ],
   },
 ];

@@ -84,7 +84,7 @@ export const AGENDA: AgendaSession[] = [
     title: "AI Tool Rotation Stations",
     format: "Hands-On Rotations · 3 × 20 min",
     description:
-      "Rotate through three hands-on stations: Claude + Perplexity for faculty, Claude Cowork for administrators & staff, and NotebookLM for students. Check in at each station to stamp your AI Learning Passport.",
+      "Rotate through three hands-on stations: Claude + Perplexity for faculty, Claude Cowork for administrators & staff, and Gemini Notebook for students. Check in at each station to stamp your AI Learning Passport.",
     links: [
       { title: "Station Check-In & Passport", href: "/stations", source: "AI Learning Passport", interactive: true },
       { title: "AI Tools for Faculty, Students & Administrators", href: "/toolkit/ai-tools", source: "Toolkit · Page 4 / Appendix · Pages 40–47" },
