@@ -247,7 +247,7 @@ function MyPassportContent() {
                 />
               </div>
 
-              {signInError && (
+              {signInError && !resendSent && (
                 <p role="alert" style={{ fontSize: 13, color: "#D32F2F", lineHeight: 1.5 }}>
                   {signInError}{" "}
                   {!signInUnverified && (
@@ -255,24 +255,26 @@ function MyPassportContent() {
                       Register instead →
                     </button>
                   )}
+                  {signInUnverified && (
+                    <>
+                      {" "}
+                      <button
+                        type="button"
+                        onClick={handleResend}
+                        disabled={resendLoading}
+                        style={{ color: "var(--fhsu-black)", fontWeight: 700, background: "none", border: "none", padding: 0, cursor: resendLoading ? "not-allowed" : "pointer", textDecoration: "underline", fontSize: 13, fontFamily: "inherit" }}
+                      >
+                        {resendLoading ? "Sending…" : "Resend confirmation email"}
+                      </button>
+                    </>
+                  )}
                 </p>
               )}
 
-              {signInUnverified && (
-                resendSent ? (
-                  <p style={{ fontSize: 13, color: "#2E7D32", lineHeight: 1.5 }}>
-                    Confirmation email sent to {signInEmail}. Check your inbox.
-                  </p>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleResend}
-                    disabled={resendLoading}
-                    style={{ alignSelf: "flex-start", color: "var(--fhsu-black)", fontWeight: 700, background: "none", border: "none", padding: 0, cursor: resendLoading ? "not-allowed" : "pointer", textDecoration: "underline", fontSize: 13, fontFamily: "inherit" }}
-                  >
-                    {resendLoading ? "Sending…" : "Resend confirmation email"}
-                  </button>
-                )
+              {resendSent && (
+                <p style={{ fontSize: 13, color: "#2E7D32", lineHeight: 1.5 }}>
+                  Confirmation email sent to {signInEmail}. Check your inbox.
+                </p>
               )}
 
               <button
