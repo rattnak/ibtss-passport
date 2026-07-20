@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { BookOpen, LogIn, UserPlus } from "lucide-react";
+import { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { BookOpen, LogIn, UserPlus, MailCheck } from "lucide-react";
 import { useSession } from "@/lib/session";
 
 const inputStyle: React.CSSProperties = {
@@ -17,10 +17,20 @@ const errorInputStyle: React.CSSProperties = {
 };
 
 export default function MyPassportPage() {
+  return (
+    <Suspense fallback={null}>
+      <MyPassportContent />
+    </Suspense>
+  );
+}
+
+function MyPassportContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { participantId, signIn } = useSession();
 
   const [mode, setMode] = useState<"signin" | "register">("signin");
+  const [pendingEmail, setPendingEmail] = useState<string | null>(null);
 
   // Sign in
   const [signInEmail, setSignInEmail] = useState("");
@@ -34,6 +44,15 @@ export default function MyPassportPage() {
   const [regLoading, setRegLoading] = useState(false);
   const [regError, setRegError] = useState("");
   const [regShake, setRegShake] = useState(false);
+
+  // Surface an error redirected from /verify (expired/tampered link, etc.)
+  useEffect(() => {
+    const verifyError = searchParams.get("verifyError");
+    if (verifyError) {
+      setSignInError(verifyError);
+      setMode("signin");
+    }
+  }, [searchParams]);
 
   // Signed in → straight to the passport
   useEffect(() => {
@@ -61,7 +80,6 @@ export default function MyPassportPage() {
       shakeIt(setSignInShake);
       return;
     }
-    router.push(`/passport/${participantId}`);
   }
 
   async function handleRegister(e: React.FormEvent) {
@@ -79,20 +97,56 @@ export default function MyPassportPage() {
       body: JSON.stringify({ name, email: regEmail }),
     });
     const data = await res.json();
+    setRegLoading(false);
     if (!res.ok) {
-      setRegError(data.error ?? "Something went wrong.");
-      setRegLoading(false);
-      shakeIt(setRegShake);
+      if (res.status === 409) {
+        setSignInEmail(regEmail);
+        setMode("signin");
+        setSignInError(data.error);
+      } else {
+        setRegError(data.error ?? "Something went wrong.");
+        shakeIt(setRegShake);
+      }
       return;
     }
-    await signIn(regEmail);
-    router.push(`/passport/${data.id}`);
+    setPendingEmail(regEmail.toLowerCase().trim());
   }
 
   if (participantId) {
     return (
       <main className="min-h-full flex items-center justify-center px-4" style={{ background: "white" }}>
         <p role="status" style={{ fontSize: 14, color: "#666" }}>Opening your passport…</p>
+      </main>
+    );
+  }
+
+  if (pendingEmail) {
+    return (
+      <main className="min-h-full flex flex-col items-center justify-center px-4 py-10" style={{ background: "white" }}>
+        <div className="w-full" style={{ maxWidth: 420 }}>
+          <div style={{
+            background: "white", borderRadius: 18, padding: "28px 22px", textAlign: "center",
+            border: "1px solid #E8E8E8", boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
+          }}>
+            <MailCheck size={32} color="var(--gold-text)" strokeWidth={1.8} aria-hidden="true" style={{ margin: "0 auto 14px" }} />
+            <h1 style={{ fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 22, color: "var(--fhsu-black)", fontWeight: 700, marginBottom: 8 }}>
+              Check your inbox
+            </h1>
+            <p style={{ fontSize: 13.5, color: "#666", lineHeight: 1.6, marginBottom: 4 }}>
+              We sent a confirmation link to <strong>{pendingEmail}</strong>. Click it to activate your passport — the link expires in 24 hours.
+            </p>
+            <p style={{ fontSize: 12, color: "#999", marginTop: 14 }}>
+              Typo'd your email?{" "}
+              <button
+                type="button"
+                onClick={() => { setPendingEmail(null); setMode("register"); }}
+                style={{ color: "var(--fhsu-black)", fontWeight: 700, background: "none", border: "none", padding: 0, cursor: "pointer", textDecoration: "underline", fontSize: 12, fontFamily: "inherit" }}
+              >
+                Register again
+              </button>
+            </p>
+          </div>
+        </div>
       </main>
     );
   }
@@ -165,7 +219,7 @@ export default function MyPassportPage() {
                 <input
                   id="signin-email" type="email" required value={signInEmail} autoComplete="email"
                   onChange={(e) => setSignInEmail(e.target.value)}
-                  placeholder="jane@fhsu.edu"
+                  placeholder="e.g. jane.smith@example.com"
                   style={signInError ? errorInputStyle : inputStyle}
                   aria-invalid={!!signInError}
                 />
@@ -210,7 +264,7 @@ export default function MyPassportPage() {
                 <input
                   id="reg-name" type="text" required value={name} autoComplete="name"
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Jane Smith"
+                  placeholder="e.g. Jane Smith"
                   style={regError ? errorInputStyle : inputStyle}
                   aria-invalid={!!regError}
                 />
@@ -222,7 +276,7 @@ export default function MyPassportPage() {
                 <input
                   id="reg-email" type="email" required value={regEmail} autoComplete="email"
                   onChange={(e) => setRegEmail(e.target.value)}
-                  placeholder="jane@fhsu.edu"
+                  placeholder="e.g. jane.smith@example.com"
                   style={regError ? errorInputStyle : inputStyle}
                   aria-invalid={!!regError}
                 />
