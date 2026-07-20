@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { LogIn, LogOut, UserCircle2 } from "lucide-react";
 import { useSession } from "@/lib/session";
 
@@ -14,8 +14,18 @@ function firstName(fullName: string | null): string | null {
 
 export default function TopBar() {
   const pathname = usePathname() ?? "/";
+  const router = useRouter();
   const { email, name, signOut } = useSession();
   const displayName = firstName(name) ?? email;
+
+  function handleSignOut() {
+    signOut();
+    // Leave any page that assumed a signed-in participant (passport,
+    // toolkit worksheets, station check-in) — /passport/[id] in particular
+    // fetched its data once on mount and would otherwise keep showing the
+    // signed-out user's name/stamps with no session backing it.
+    router.push("/");
+  }
 
   if (pathname.startsWith("/admin")) return null;
 
@@ -66,7 +76,7 @@ export default function TopBar() {
               </Link>
             )}
             <button
-              onClick={signOut}
+              onClick={handleSignOut}
               aria-label={`Sign out ${name ?? email}`} // full name for screen readers
               title="Sign out"
               style={{
