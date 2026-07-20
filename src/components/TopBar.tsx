@@ -19,6 +19,8 @@ export default function TopBar() {
 
   if (pathname.startsWith("/admin")) return null;
 
+  const onPassportPage = pathname.startsWith("/passport/");
+
   return (
     <header
       style={{
@@ -53,7 +55,7 @@ export default function TopBar() {
               {displayName}
             </span>
           </Link>
-        ) : (
+        ) : onPassportPage ? null : (
           <Link
             href="/my-passport"
             style={{
