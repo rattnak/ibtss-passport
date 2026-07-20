@@ -13,7 +13,7 @@ type Session = {
   email: string | null;
   name: string | null;
   participantId: string | null;
-  signIn: (email: string) => Promise<{ ok: boolean; error?: string }>;
+  signIn: (email: string) => Promise<{ ok: boolean; error?: string; unverified?: boolean }>;
   signOut: () => void;
   openSignIn: () => void;
 };
@@ -55,6 +55,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     if (!data.verified) {
       return {
         ok: false,
+        unverified: true,
         error: "Please confirm your email first — check your inbox for the link we sent when you registered.",
       };
     }

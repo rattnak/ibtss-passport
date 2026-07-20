@@ -37,6 +37,9 @@ function MyPassportContent() {
   const [signInLoading, setSignInLoading] = useState(false);
   const [signInError, setSignInError] = useState("");
   const [signInShake, setSignInShake] = useState(false);
+  const [signInUnverified, setSignInUnverified] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
+  const [resendSent, setResendSent] = useState(false);
 
   // Register
   const [name, setName] = useState("");
@@ -73,12 +76,31 @@ function MyPassportContent() {
     }
     setSignInLoading(true);
     setSignInError("");
+    setSignInUnverified(false);
+    setResendSent(false);
     const result = await signIn(signInEmail);
     setSignInLoading(false);
     if (!result.ok) {
       setSignInError(result.error ?? "Something went wrong.");
+      setSignInUnverified(!!result.unverified);
       shakeIt(setSignInShake);
       return;
+    }
+  }
+
+  async function handleResend() {
+    setResendLoading(true);
+    const res = await fetch("/api/resend-verification", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: signInEmail }),
+    });
+    setResendLoading(false);
+    if (res.ok) {
+      setResendSent(true);
+    } else {
+      const data = await res.json();
+      setSignInError(data.error ?? "Something went wrong.");
     }
   }
 
@@ -228,10 +250,29 @@ function MyPassportContent() {
               {signInError && (
                 <p role="alert" style={{ fontSize: 13, color: "#D32F2F", lineHeight: 1.5 }}>
                   {signInError}{" "}
-                  <button type="button" onClick={() => setMode("register")} style={{ color: "var(--fhsu-black)", fontWeight: 700, background: "none", border: "none", padding: 0, cursor: "pointer", textDecoration: "underline", fontSize: 13, fontFamily: "inherit" }}>
-                    Register instead →
-                  </button>
+                  {!signInUnverified && (
+                    <button type="button" onClick={() => setMode("register")} style={{ color: "var(--fhsu-black)", fontWeight: 700, background: "none", border: "none", padding: 0, cursor: "pointer", textDecoration: "underline", fontSize: 13, fontFamily: "inherit" }}>
+                      Register instead →
+                    </button>
+                  )}
                 </p>
+              )}
+
+              {signInUnverified && (
+                resendSent ? (
+                  <p style={{ fontSize: 13, color: "#2E7D32", lineHeight: 1.5 }}>
+                    Confirmation email sent to {signInEmail}. Check your inbox.
+                  </p>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleResend}
+                    disabled={resendLoading}
+                    style={{ alignSelf: "flex-start", color: "var(--fhsu-black)", fontWeight: 700, background: "none", border: "none", padding: 0, cursor: resendLoading ? "not-allowed" : "pointer", textDecoration: "underline", fontSize: 13, fontFamily: "inherit" }}
+                  >
+                    {resendLoading ? "Sending…" : "Resend confirmation email"}
+                  </button>
+                )
               )}
 
               <button
