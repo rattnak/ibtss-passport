@@ -70,6 +70,8 @@ export const STATIONS: Station[] = [
     emoji: "🔍",
     resources: [
       { title: "Gemini Notebook (formerly NotebookLM)", url: "https://notebooklm.google.com" },
+      { title: "Gemini Notebook for Students (Google for Education)", url: "https://edu.google.com/ai-notebooklm/" },
+      { title: "Quickstart Guide: Gemini & Gemini Notebook for Education", url: "https://knowledge.workspace.google.com/admin/getting-started/editions/quickstart-guide-to-gemini-and-notebooklm-for-education" },
     ],
   },
 ];
