@@ -62,14 +62,12 @@
 @media (min-width: 480px) { .topbar-name { max-width: 170px; } }
 @media (min-width: 768px) { .topbar-name { max-width: 280px; } }
 
-/* Card grid: single column on phones, two columns from tablet up */
+/* Card list: always a single column so a small number of cards never
+   wraps into an awkward orphan row (e.g. 2 cards then 1 alone). */
 .card-grid {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 8px;
-  grid-template-columns: 1fr;
-}
-@media (min-width: 640px) {
-  .card-grid { grid-template-columns: 1fr 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
