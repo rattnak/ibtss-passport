@@ -43,7 +43,17 @@ export async function POST(req: NextRequest) {
 
   const token = createVerifyToken(data.id);
   const verifyUrl = `${BASE_URL}/verify?token=${encodeURIComponent(token)}`;
-  await sendParticipantVerifyLink(clean, name.trim(), verifyUrl);
+  const sendResult = await sendParticipantVerifyLink(clean, name.trim(), verifyUrl);
+
+  if (sendResult.error) {
+    // The participant row exists but they have no way to verify it yet.
+    // Tell them plainly rather than showing "check your inbox" for an
+    // email that never left our sender.
+    return NextResponse.json(
+      { error: "We created your passport but couldn't send the confirmation email. Please try again in a moment or contact the workshop team." },
+      { status: 502 }
+    );
+  }
 
   return NextResponse.json({ id: data.id, pendingVerification: true });
 }
