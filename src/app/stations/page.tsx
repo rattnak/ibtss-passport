@@ -72,6 +72,7 @@ export default function StationsPage() {
   }, [stamp]);
 
   const resultStation = result && result.stationId ? getStation(result.stationId) : null;
+  const resultColor = result && result.stationId ? STATION_COLORS[result.stationId - 1] : null;
 
   return (
     <main className="min-h-full flex flex-col items-center px-4 pt-4 pb-8" style={{ background: "white" }}>
@@ -126,8 +127,8 @@ export default function StationsPage() {
         {result && !stamping && (
           <div role="status" className="slide-up" style={{
             marginTop: 14, borderRadius: 14, padding: "16px 16px",
-            background: result.error ? "#FDECEA" : result.isComplete ? "var(--fhsu-black)" : "#EDF7EF",
-            border: result.error ? "1px solid #F5C6C0" : result.isComplete ? "2px solid var(--fhsu-gold)" : "1px solid #CDE8D2",
+            background: result.error ? "#FDECEA" : result.isComplete ? "var(--fhsu-black)" : (resultColor?.bg ?? "#EDF7EF"),
+            border: result.error ? "1px solid #F5C6C0" : result.isComplete ? "2px solid var(--fhsu-gold)" : `1px solid ${resultColor?.color ?? "#CDE8D2"}`,
           }}>
             {result.error ? (
               <p style={{ fontSize: 13.5, color: "#8C1D18", lineHeight: 1.5 }}>{result.error}</p>
@@ -135,16 +136,16 @@ export default function StationsPage() {
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 {result.isComplete
                   ? <Trophy size={26} color="var(--fhsu-gold)" strokeWidth={2} aria-hidden="true" />
-                  : <CheckCircle2 size={26} color="#1E7167" strokeWidth={2} aria-hidden="true" />}
+                  : <CheckCircle2 size={26} color={resultColor?.color ?? "#1E7167"} strokeWidth={2} aria-hidden="true" />}
                 <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: 14.5, fontWeight: 700, color: result.isComplete ? "var(--fhsu-gold)" : "#14532D" }}>
+                  <p style={{ fontSize: 14.5, fontWeight: 700, color: result.isComplete ? "var(--fhsu-gold)" : (resultColor?.color ?? "#14532D") }}>
                     {result.isComplete
                       ? "All three lenses collected!"
                       : result.alreadyStamped
                         ? `Already stamped: ${resultStation?.stampLabel}`
                         : `Stamp collected: ${resultStation?.stampLabel}`}
                   </p>
-                  <p style={{ fontSize: 12, color: result.isComplete ? "rgba(255,255,255,0.75)" : "#3F6212", marginTop: 2 }}>
+                  <p style={{ fontSize: 12, color: result.isComplete ? "rgba(255,255,255,0.75)" : "#555", marginTop: 2 }}>
                     {result.isComplete
                       ? "View your passport to share your achievement."
                       : `${result.stampsCollected ?? "–"} of 3 stations stamped.`}
@@ -153,7 +154,7 @@ export default function StationsPage() {
                 <button
                   onClick={() => router.push(`/passport/${participantId}`)}
                   style={{
-                    background: result.isComplete ? "var(--fhsu-gold)" : "#1E7167",
+                    background: result.isComplete ? "var(--fhsu-gold)" : (resultColor?.color ?? "#1E7167"),
                     color: result.isComplete ? "var(--fhsu-black)" : "white",
                     border: "none", borderRadius: 10, padding: "10px 14px", minHeight: 44,
                     fontSize: 12.5, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap",
