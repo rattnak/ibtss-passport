@@ -68,7 +68,11 @@ export default function PassportPage() {
     );
   }
 
-  const completed = progress.stations_completed ?? [];
+  // Postgres's array_agg over a left join with no matching stamps returns
+  // [null] rather than [] or null, so filter that out here.
+  const completed = (progress.stations_completed ?? []).filter(
+    (s): s is number => s !== null
+  );
   const passportUrl = typeof window !== "undefined" ? window.location.href : "";
 
   function buildLinkedInUrl() {
