@@ -208,4 +208,4 @@ Notes:
 
 ---
 
-Maintained by [Chanrattnak Mong](https://github.com/rattnak) — FHSU Technology and Innovation in Learning and Teaching (TILT)
+Maintained by [Chanrattnak Mong](https://github.com/rattnak) — FHSU TILT & PCE
