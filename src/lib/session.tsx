@@ -52,6 +52,12 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
       return { ok: false, error: "No passport found for this email. Please register below." };
     }
     const data = await res.json();
+    if (!data.verified) {
+      return {
+        ok: false,
+        error: "Please confirm your email first — check your inbox for the link we sent when you registered.",
+      };
+    }
     setEmail(clean);
     setName(data.name ?? null);
     setParticipantId(data.id ?? null);

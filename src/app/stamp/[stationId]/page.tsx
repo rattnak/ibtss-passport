@@ -48,7 +48,12 @@ export default function StampPage() {
       setLoading(false);
       return;
     }
-    const { id: participantId } = await lookupRes.json();
+    const { id: participantId, verified } = await lookupRes.json();
+    if (!verified) {
+      setResult({ success: false, error: "Please confirm your email first — check your inbox for the link we sent when you registered." });
+      setLoading(false);
+      return;
+    }
     try { localStorage.setItem("ibtss_email", email.toLowerCase().trim()); } catch {}
     const stampRes = await fetch("/api/stamp", {
       method: "POST",
@@ -106,7 +111,7 @@ export default function StampPage() {
           <form onSubmit={handleStamp} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             <input
               type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
-              placeholder="jane@fhsu.edu"
+              placeholder="e.g. jane.smith@example.com"
               style={{
                 width: "100%", border: "1.5px solid #DDD5C4", borderRadius: 12,
                 padding: "12px 14px", fontSize: 14, color: "#1a1a1a",

@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
   const db = supabaseAdmin();
   const { data, error } = await db
     .from("participants")
-    .select("id, name")
+    .select("id, name, verified_at")
     .eq("email", email.toLowerCase().trim())
     .single();
 
@@ -18,5 +18,5 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Not found." }, { status: 404 });
   }
 
-  return NextResponse.json({ id: data.id, name: data.name });
+  return NextResponse.json({ id: data.id, name: data.name, verified: !!data.verified_at });
 }
