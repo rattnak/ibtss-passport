@@ -205,7 +205,7 @@ export default function MyPassportPage() {
             <form onSubmit={handleRegister} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               <div>
                 <label htmlFor="reg-name" style={{ display: "block", fontSize: 12, fontWeight: 600, color: "var(--fhsu-black)", marginBottom: 6 }}>
-                  Full Name
+                  Full Name <span style={{ fontWeight: 400, color: "#999" }}>(First Last)</span>
                 </label>
                 <input
                   id="reg-name" type="text" required value={name} autoComplete="name"
@@ -213,7 +213,11 @@ export default function MyPassportPage() {
                   placeholder="Jane Smith"
                   style={regError ? errorInputStyle : inputStyle}
                   aria-invalid={!!regError}
+                  aria-describedby="reg-name-hint"
                 />
+                <p id="reg-name-hint" style={{ fontSize: 11, color: "#999", marginTop: 5 }}>
+                  Enter your first name first — it&apos;s shown on your passport and in the app.
+                </p>
               </div>
               <div>
                 <label htmlFor="reg-email" style={{ display: "block", fontSize: 12, fontWeight: 600, color: "var(--fhsu-black)", marginBottom: 6 }}>

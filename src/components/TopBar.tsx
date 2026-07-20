@@ -5,9 +5,17 @@ import { usePathname } from "next/navigation";
 import { LogIn, LogOut, UserCircle2 } from "lucide-react";
 import { useSession } from "@/lib/session";
 
+// Show just the first name in the top bar so it never gets clipped on
+// small screens — assumes registration follows "First Last" order.
+function firstName(fullName: string | null): string | null {
+  if (!fullName) return null;
+  return fullName.trim().split(/\s+/)[0] || null;
+}
+
 export default function TopBar() {
   const pathname = usePathname() ?? "/";
   const { email, name, signOut } = useSession();
+  const displayName = firstName(name) ?? email;
 
   if (pathname.startsWith("/admin")) return null;
 
@@ -38,13 +46,13 @@ export default function TopBar() {
               <span style={{ display: "flex", alignItems: "center", gap: 6, minWidth: 0, padding: "6px 10px" }}>
                 <UserCircle2 size={17} color="var(--fhsu-gold)" aria-hidden="true" style={{ flexShrink: 0 }} />
                 <span className="topbar-name" style={{ color: "white", fontSize: 13, fontWeight: 700 }}>
-                  {name ?? email}
+                  {displayName}
                 </span>
               </span>
             ) : (
               <Link
                 href="/my-passport"
-                aria-label={`${name ?? email} — open my passport`}
+                aria-label={`${name ?? email} — open my passport`} // full name for screen readers
                 style={{
                   display: "flex", alignItems: "center", gap: 6, minWidth: 0, minHeight: 40,
                   textDecoration: "none", padding: "6px 10px", borderRadius: 10,
@@ -53,13 +61,13 @@ export default function TopBar() {
               >
                 <UserCircle2 size={17} color="var(--fhsu-gold)" aria-hidden="true" style={{ flexShrink: 0 }} />
                 <span className="topbar-name" style={{ color: "white", fontSize: 13, fontWeight: 700 }}>
-                  {name ?? email}
+                  {displayName}
                 </span>
               </Link>
             )}
             <button
               onClick={signOut}
-              aria-label={`Sign out ${name ?? email}`}
+              aria-label={`Sign out ${name ?? email}`} // full name for screen readers
               title="Sign out"
               style={{
                 display: "flex", alignItems: "center", justifyContent: "center",
