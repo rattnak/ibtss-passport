@@ -5,8 +5,13 @@ create table if not exists participants (
   id uuid primary key default gen_random_uuid(),
   name text not null,
   email text not null unique,
-  created_at timestamptz default now()
+  created_at timestamptz default now(),
+  verified_at timestamptz
 );
+
+-- Safe to re-run against an existing database created before verification
+-- was added.
+alter table participants add column if not exists verified_at timestamptz;
 
 create table if not exists stamps (
   id uuid primary key default gen_random_uuid(),

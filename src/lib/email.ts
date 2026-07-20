@@ -37,6 +37,32 @@ export async function sendStationResources(
   });
 }
 
+export async function sendParticipantVerifyLink(email: string, name: string, verifyUrl: string) {
+  return resend.emails.send({
+    from: FROM,
+    to: email,
+    subject: "Confirm your IBTSS 2026 AI Learning Passport",
+    html: `
+      <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
+        <div style="background:#000000;padding:32px;border-radius:16px 16px 0 0;">
+          <p style="color:#F7A800;font-size:12px;letter-spacing:2px;text-transform:uppercase;margin:0 0 8px;">Fort Hays State University · IBTSS 2026</p>
+          <h1 style="color:white;margin:0;font-size:22px;">Confirm Your Passport</h1>
+        </div>
+        <div style="padding:32px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:0 0 16px 16px;">
+          <p style="color:#334155;">Hi ${name},</p>
+          <p style="color:#334155;">Click the button below to confirm this email and activate your AI Learning Passport. This link expires in 24 hours.</p>
+          <div style="text-align:center;margin:32px 0;">
+            <a href="${verifyUrl}" style="background:#F7A800;color:#000000;padding:14px 32px;border-radius:12px;text-decoration:none;font-weight:700;display:inline-block;">
+              Confirm My Passport
+            </a>
+          </div>
+          <p style="color:#94a3b8;font-size:12px;">If you didn't request this, you can safely ignore this email.</p>
+        </div>
+      </div>
+    `,
+  });
+}
+
 export async function sendAdminMagicLink(email: string, verifyUrl: string) {
   return resend.emails.send({
     from: FROM,
