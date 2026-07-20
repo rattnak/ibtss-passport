@@ -132,7 +132,7 @@ export default function HomePage() {
 
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/passport-logo.png"
+            src="/FHSU-Ai.png"
             alt="FHSU AI in Higher Education — IBTSS 2026 Pre-Conference badge"
             style={{ width: 92, height: "auto", margin: "0 auto 12px", display: "block", filter: "drop-shadow(0 3px 10px rgba(0,0,0,0.4))" }}
           />

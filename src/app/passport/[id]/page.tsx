@@ -8,6 +8,7 @@ import {
   Share2, Copy, ExternalLink, Lock, ArrowRight,
 } from "lucide-react";
 import { STATIONS } from "@/lib/stations";
+import CredlyBadgeCard from "@/components/CredlyBadgeCard";
 
 type Progress = {
   id: string;
@@ -93,7 +94,7 @@ export default function PassportPage() {
           }}>
             {/* watermark */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/passport-logo.png" alt="" aria-hidden="true"
+            <img src="/FHSU-Ai.png" alt="" aria-hidden="true"
               style={{ position: "absolute", right: -20, bottom: -30, width: 150, opacity: 0.07, transform: "rotate(-12deg)", pointerEvents: "none" }} />
 
             <p style={{ color: "rgba(247,168,0,0.8)", fontSize: 9, letterSpacing: 3, textTransform: "uppercase", fontWeight: 700, marginBottom: 12 }}>
@@ -103,7 +104,7 @@ export default function PassportPage() {
             <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/passport-logo.png"
+                src="/FHSU-Ai.png"
                 alt="FHSU AI in Higher Education — IBTSS 2026 Pre-Conference badge"
                 style={{ width: 76, height: "auto", flexShrink: 0, filter: "drop-shadow(0 3px 10px rgba(0,0,0,0.35))" }}
               />
@@ -290,6 +291,8 @@ export default function PassportPage() {
                   </p>
                 </div>
               </div>
+
+              <CredlyBadgeCard isComplete={progress.is_complete} />
 
               {/* Reflection + preview */}
               <div>
