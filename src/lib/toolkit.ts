@@ -111,7 +111,6 @@ export const TOOLKIT_SECTIONS: ToolkitSection[] = [
       { kind: "heading", text: "Today's Station Tools" },
       { kind: "links", links: [
         { title: "Claude (Anthropic)", url: "https://claude.ai", note: "Station 1 · Faculty — prompt refinement and output evaluation" },
-        { title: "Perplexity", url: "https://www.perplexity.ai", note: "Station 1 · Faculty — source-backed research and claim-checking" },
         { title: "Claude Cowork", url: "https://www.anthropic.com/product/claude-cowork", note: "Station 2 · Administrators & Staff — delegate real office work: files, connected apps, multi-step tasks" },
         { title: "Gemini Notebook (Google, formerly NotebookLM)", url: "https://notebooklm.google.com", note: "Station 3 · Students — ground AI in YOUR course materials; summaries, study guides, source-backed learning" },
       ]},
@@ -341,7 +340,6 @@ TOOLKIT_SECTIONS.push({
     { kind: "heading", text: "Keep Exploring Today's Tools" },
     { kind: "links", links: [
       { title: "Claude", url: "https://claude.ai", note: "Practice the Station 1 prompt-refinement exercise on your own task" },
-      { title: "Perplexity", url: "https://www.perplexity.ai", note: "Run the same query you gave Claude and compare the sourced answers" },
       { title: "Claude Cowork", url: "https://www.anthropic.com/product/claude-cowork", note: "Delegate one real recurring task: trigger → information source → action → human review" },
       { title: "Gemini Notebook (formerly NotebookLM)", url: "https://notebooklm.google.com", note: "Build a notebook from your own course materials this week" },
     ]},

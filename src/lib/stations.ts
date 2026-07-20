@@ -1,7 +1,7 @@
 export type Station = {
   id: 1 | 2 | 3;
   title: string;
-  /** Short label shown on the passport stamp and station badges, e.g. "Faculty · Claude & Perplexity". */
+  /** Short label shown on the passport stamp and station badges, e.g. "Faculty · Claude". */
   stampLabel: string;
   /** What participants leave the station with, shown on the passport/toolkit. */
   takeHome: string;
@@ -22,19 +22,18 @@ export type Resource = {
 export const STATIONS: Station[] = [
   {
     id: 1,
-    title: "Station 1 — Faculty: Claude & Perplexity",
-    stampLabel: "Faculty · Claude & Perplexity",
-    takeHome: "Revised prompt + two-tool comparison reflection",
+    title: "Station 1 — Faculty: Claude",
+    stampLabel: "Faculty · Claude",
+    takeHome: "Revised prompt + reflection",
     audience: "Faculty",
-    tools: ["Claude", "Perplexity"],
+    tools: ["Claude"],
     description:
-      "Compare AI tools side-by-side for course design and research: use Claude for prompt refinement, drafting, and output evaluation, and Perplexity for source-backed research and claim-checking. Practice responsible, critical AI use you can model for students.",
+      "Use Claude for course design and research: prompt refinement, drafting, and output evaluation. Practice responsible, critical AI use you can model for students.",
     color: "from-blue-600 to-blue-800",
     accent: "blue",
     emoji: "📚",
     resources: [
       { title: "Claude by Anthropic", url: "https://claude.ai" },
-      { title: "Perplexity AI", url: "https://www.perplexity.ai" },
       { title: "Responsible AI Use Guide (FHSU)", url: "https://www.fhsu.edu/ai/images/ai-use.pdf" },
     ],
   },

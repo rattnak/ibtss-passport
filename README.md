@@ -72,7 +72,7 @@ Participants register, visit three AI workshop stations, scan QR codes to collec
 
 | Station | Audience | Tool |
 |---|---|---|
-| 1 | Faculty | Claude + Perplexity |
+| 1 | Faculty | Claude |
 | 2 | Administrators & Staff | Claude Cowork |
 | 3 | Students | Gemini Notebook |
 
