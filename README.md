@@ -72,9 +72,9 @@ Participants register, visit three AI workshop stations, scan QR codes to collec
 
 | Station | Audience | Tool |
 |---|---|---|
-| 1 | Faculty | NotebookLM |
-| 2 | Administrators & Staff | gethouston.ai |
-| 3 | Students | Claude + Perplexity |
+| 1 | Faculty | Claude + Perplexity |
+| 2 | Administrators & Staff | Claude Cowork |
+| 3 | Students | NotebookLM |
 
 ---
 
