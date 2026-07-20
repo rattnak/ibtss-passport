@@ -29,20 +29,64 @@ export function useSession() {
   return useContext(SessionContext);
 }
 
+type SessionState = {
+  email: string | null;
+  name: string | null;
+  participantId: string | null;
+};
+
+const SIGNED_OUT: SessionState = { email: null, name: null, participantId: null };
+
+function clearStoredSession() {
+  try {
+    localStorage.removeItem("ibtss_email");
+    localStorage.removeItem("ibtss_name");
+    localStorage.removeItem("ibtss_participant_id");
+  } catch {}
+}
+
+function readStoredSession(): SessionState {
+  try {
+    const email = localStorage.getItem("ibtss_email");
+    if (!email) return SIGNED_OUT;
+    return {
+      email,
+      name: localStorage.getItem("ibtss_name"),
+      participantId: localStorage.getItem("ibtss_participant_id"),
+    };
+  } catch {
+    return SIGNED_OUT;
+  }
+}
+
 export function SessionProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const [email, setEmail] = useState<string | null>(null);
-  const [name, setName] = useState<string | null>(null);
-  const [participantId, setParticipantId] = useState<string | null>(null);
+  // Lazy initializer so a cached session renders immediately on first
+  // paint (no signed-out flash) — localStorage isn't available during SSR,
+  // but this function only runs client-side, after hydration starts.
+  const [state, setState] = useState<SessionState>(readStoredSession);
 
-  // Restore session
+  // Re-check the restored session against the database — a locally cached
+  // session can outlive the participant it points to (deleted,
+  // re-registered, never verified), which would otherwise show a name in
+  // the navbar for an account that no other page can actually find.
   useEffect(() => {
-    try {
-      const e = localStorage.getItem("ibtss_email");
-      const n = localStorage.getItem("ibtss_name");
-      const i = localStorage.getItem("ibtss_participant_id");
-      if (e) { setEmail(e); setName(n); setParticipantId(i); }
-    } catch {}
+    if (!state.email) return;
+    const { email, participantId } = state;
+
+    fetch(`/api/participant-by-email?email=${encodeURIComponent(email)}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        const stillValid = data && data.verified && data.id === participantId;
+        if (stillValid) return;
+        setState(SIGNED_OUT);
+        clearStoredSession();
+      })
+      .catch(() => {}); // offline/network error — keep the cached session rather than sign out
+    // Runs once on mount only — re-validating on every state change (e.g.
+    // right after signIn sets it) would immediately re-fetch what signIn
+    // already just confirmed.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const signIn = useCallback(async (rawEmail: string) => {
@@ -59,9 +103,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
         error: "Please confirm your email first — check your inbox for the link we sent when you registered.",
       };
     }
-    setEmail(clean);
-    setName(data.name ?? null);
-    setParticipantId(data.id ?? null);
+    setState({ email: clean, name: data.name ?? null, participantId: data.id ?? null });
     try {
       localStorage.setItem("ibtss_email", clean);
       if (data.name) localStorage.setItem("ibtss_name", data.name);
@@ -71,12 +113,8 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signOut = useCallback(() => {
-    setEmail(null); setName(null); setParticipantId(null);
-    try {
-      localStorage.removeItem("ibtss_email");
-      localStorage.removeItem("ibtss_name");
-      localStorage.removeItem("ibtss_participant_id");
-    } catch {}
+    setState(SIGNED_OUT);
+    clearStoredSession();
   }, []);
 
   const openSignIn = useCallback(() => {
@@ -84,7 +122,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   }, [router]);
 
   return (
-    <SessionContext.Provider value={{ email, name, participantId, signIn, signOut, openSignIn }}>
+    <SessionContext.Provider value={{ ...state, signIn, signOut, openSignIn }}>
       {children}
     </SessionContext.Provider>
   );

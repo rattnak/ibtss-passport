@@ -56,9 +56,15 @@ function PassportPageContent() {
     fetch(`/api/passport/${id}`)
       .then((r) => r.ok ? r.json() : Promise.reject("not found"))
       .then(setProgress)
-      .catch(() => setError("Passport not found."))
+      .catch(() => {
+        setError("Passport not found.");
+        // The session pointed at a participant that no longer exists (e.g.
+        // deleted directly in the database) — clear it rather than leave
+        // the navbar showing a name for an account this page can't find.
+        if (participantId === id) signOut();
+      })
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [id, participantId, signOut]);
 
   // The email-verification link redirects here straight from the server
   // (no client-side sign-in happens along the way), so without this the
