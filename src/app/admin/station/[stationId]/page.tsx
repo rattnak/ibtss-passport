@@ -70,7 +70,7 @@ export default function AdminStationPage() {
           </p>
           {qrDataUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={qrDataUrl} alt={`QR code linking to /stamp/${station.id}`} style={{ width: 280, height: 280, borderRadius: 16, border: "1px solid #EEE" }} />
+            <img src={qrDataUrl} alt={`QR code linking to /stamp/${station.id}`} style={{ width: 280, height: 280, borderRadius: 16, border: "1px solid #EEE", display: "block", margin: "0 auto" }} />
           ) : (
             <div style={{ width: 280, height: 280, background: "#F2F2F2", borderRadius: 16, margin: "0 auto" }} />
           )}
