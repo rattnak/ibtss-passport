@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
   BookOpen, Settings2, Search, Trophy, CheckCircle2, Circle,
-  Share2, Copy, ExternalLink, Lock, ArrowRight,
+  Share2, Copy, ExternalLink, Lock, ArrowRight, LogOut,
 } from "lucide-react";
 import { STATIONS } from "@/lib/stations";
 import CredlyBadgeCard from "@/components/CredlyBadgeCard";
@@ -41,7 +41,7 @@ function PassportPageContent() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { participantId, signIn } = useSession();
+  const { participantId, signIn, signOut } = useSession();
   const [progress, setProgress] = useState<Progress | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -80,6 +80,13 @@ function PassportPageContent() {
     if (participantId === id) wasOwner.current = true;
     else if (wasOwner.current && !participantId) router.replace("/");
   }, [participantId, id, router]);
+
+  const isOwner = participantId === id;
+
+  function handleSignOut() {
+    signOut();
+    router.replace("/");
+  }
 
   if (loading) {
     return (
@@ -422,6 +429,21 @@ function PassportPageContent() {
           <p style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, fontSize: 11, color: "#AAA", marginTop: 20 }}>
             <Share2 size={11} aria-hidden="true" /> {progress.email}
           </p>
+
+          {isOwner && (
+            <button
+              onClick={handleSignOut}
+              style={{
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                width: "100%", background: "none", color: "#888",
+                border: "1px solid #DDD", borderRadius: 12,
+                padding: "12px 0", minHeight: 44, fontSize: 13, fontWeight: 600,
+                cursor: "pointer", fontFamily: "inherit", marginTop: 20,
+              }}
+            >
+              <LogOut size={14} strokeWidth={2} aria-hidden="true" /> Sign out
+            </button>
+          )}
         </div>
       </div>
     </main>
