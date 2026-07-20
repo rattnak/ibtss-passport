@@ -2,8 +2,7 @@ import { Resend } from "resend";
 import { Station } from "./stations";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-// Use onboarding@resend.dev until a custom domain is verified in Resend dashboard
-const FROM = "IBTSS Pre-Conference Workshop <onboarding@resend.dev>";
+const FROM = "IBTSS Pre-Conference Workshop <noreply@rattnak.com>";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
 
 export async function sendStationResources(
