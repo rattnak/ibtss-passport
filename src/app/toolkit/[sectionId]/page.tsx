@@ -49,9 +49,9 @@ function FieldInput({ field, value, onChange }: {
               style={{
                 flex: 1, minHeight: 46, borderRadius: 10, fontFamily: "inherit",
                 fontSize: 15, fontWeight: 700, cursor: "pointer",
-                border: current === n ? "2px solid var(--fhsu-black)" : "1.5px solid #CCCCCC",
-                background: current === n ? "var(--fhsu-gold)" : "white",
-                color: current === n ? "var(--fhsu-black)" : "#555",
+                border: current === n ? "2px solid var(--fhsu-gold)" : "1.5px solid #CCCCCC",
+                background: current === n ? "rgba(247,168,0,0.16)" : "white",
+                color: "var(--fhsu-black)",
               }}>{n}</button>
           ))}
         </div>
@@ -84,7 +84,7 @@ function FieldInput({ field, value, onChange }: {
               display: "flex", alignItems: "center", gap: 10, textAlign: "left",
               padding: "12px 14px", minHeight: 46, borderRadius: 10, fontFamily: "inherit",
               fontSize: 13.5, lineHeight: 1.4, cursor: "pointer",
-              border: active ? "2px solid var(--fhsu-black)" : "1.5px solid #CCCCCC",
+              border: active ? "2px solid var(--fhsu-gold)" : "1.5px solid #CCCCCC",
               background: active ? "rgba(247,168,0,0.14)" : "white",
               color: "var(--fhsu-black)",
               fontWeight: active ? 700 : 400,
@@ -92,10 +92,10 @@ function FieldInput({ field, value, onChange }: {
             <span aria-hidden="true" style={{
               width: 18, height: 18, borderRadius: field.multi ? 5 : "50%", flexShrink: 0,
               border: active ? "none" : "1.5px solid #999",
-              background: active ? "var(--fhsu-black)" : "white",
+              background: active ? "var(--fhsu-gold)" : "white",
               display: "flex", alignItems: "center", justifyContent: "center",
             }}>
-              {active && <Check size={12} color="var(--fhsu-gold)" strokeWidth={3} />}
+              {active && <Check size={12} color="var(--fhsu-black)" strokeWidth={3} />}
             </span>
             {opt}
           </button>
@@ -232,7 +232,7 @@ export default function ToolkitSectionPage() {
       <main className="min-h-full flex items-center justify-center px-4" style={{ background: "white" }}>
         <div style={{ textAlign: "center", maxWidth: 320 }}>
           <p style={{ fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 20, color: "var(--fhsu-black)", marginBottom: 8 }}>Section Not Found</p>
-          <Link href="/" style={{ color: "var(--gold-text)", fontWeight: 700, fontSize: 14 }}>← Back to Agenda</Link>
+          <Link href="/toolkit" style={{ color: "var(--gold-text)", fontWeight: 700, fontSize: 14 }}>← Back to Toolkit</Link>
         </div>
       </main>
     );
