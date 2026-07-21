@@ -19,7 +19,7 @@ export default function TopBar() {
 
   if (pathname.startsWith("/admin")) return null;
 
-  const onPassportPage = pathname.startsWith("/passport/");
+  const hideSignIn = pathname.startsWith("/passport/") || pathname === "/my-passport";
 
   return (
     <header
@@ -55,7 +55,7 @@ export default function TopBar() {
               {displayName}
             </span>
           </Link>
-        ) : onPassportPage ? null : (
+        ) : hideSignIn ? null : (
           <Link
             href="/my-passport"
             style={{
