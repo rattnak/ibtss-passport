@@ -113,11 +113,11 @@ export default function HomePage() {
     <main className="min-h-full flex flex-col items-center px-4 py-8" style={{ background: "white" }}>
 
       {/* ── Header / Banner ── */}
-      <div className="page-container mb-8">
+      <div className="mb-8" style={{ width: "100%", maxWidth: 672 }}>
         <div className="passport-cover-bg" style={{
           border: "1.5px solid var(--gold)",
           borderRadius: 16,
-          padding: "26px 24px 22px",
+          padding: "20px 24px 18px",
           textAlign: "center",
           position: "relative",
         }}>
@@ -134,30 +134,30 @@ export default function HomePage() {
           <img
             src="/FHSU-Ai.png"
             alt="FHSU AI in Higher Education — IBTSS 2026 Pre-Conference badge"
-            style={{ width: 92, height: "auto", margin: "0 auto 12px", display: "block", filter: "drop-shadow(0 3px 10px rgba(0,0,0,0.4))" }}
+            style={{ width: 76, height: "auto", margin: "0 auto 10px", display: "block", filter: "drop-shadow(0 3px 10px rgba(0,0,0,0.4))" }}
           />
-          <p style={{ color: "var(--gold)", fontSize: 10, letterSpacing: 2.5, textTransform: "uppercase", fontWeight: 700, marginBottom: 8 }}>
+          <p style={{ color: "var(--gold)", fontSize: 10, letterSpacing: 2.5, textTransform: "uppercase", fontWeight: 700, marginBottom: 6 }}>
             FHSU · {WORKSHOP_INFO.event}
           </p>
-          <h1 style={{ color: "var(--gold)", fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 26, fontWeight: 700, lineHeight: 1.2, marginBottom: 10 }}>
+          <h1 style={{ color: "var(--gold)", fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 24, fontWeight: 700, lineHeight: 1.2, marginBottom: 8 }}>
             AI in Higher Education
           </h1>
-          <p style={{ color: "rgba(255,255,255,0.75)", fontSize: 13, fontStyle: "italic", marginBottom: 14 }}>
+          <p style={{ color: "rgba(255,255,255,0.75)", fontSize: 13, fontStyle: "italic", marginBottom: 12 }}>
             From Challenge to Opportunity
           </p>
           <div style={{ display: "flex", justifyContent: "center", gap: 16, flexWrap: "wrap" }}>
             <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "rgba(255,255,255,0.7)" }}>
               <Clock size={13} color="var(--gold)" strokeWidth={2} /> {WORKSHOP_INFO.date} · {WORKSHOP_INFO.time}
             </span>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "rgba(255,255,255,0.7)" }}>
-              <MapPin size={13} color="var(--gold)" strokeWidth={2} /> AUPP · Phnom Penh
-            </span>
+            <a href="#location-map" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "rgba(255,255,255,0.7)", textDecoration: "underline" }}>
+              <MapPin size={13} color="var(--gold)" strokeWidth={2} /> American University of Phnom Penh
+            </a>
           </div>
         </div>
       </div>
 
       {/* ── Agenda ── */}
-      <div className="page-container" style={{ marginBottom: 28 }}>
+      <div style={{ width: "100%", maxWidth: 672, marginBottom: 28 }}>
         <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 12 }}>
           <h2 style={{ fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 20, fontWeight: 700, color: "var(--fhsu-black)" }}>
             Workshop Agenda
@@ -170,7 +170,8 @@ export default function HomePage() {
       </div>
 
       {/* ── Stations shortcut ── */}
-      <Link href="/stations" className="page-container" style={{
+      <Link href="/stations" style={{
+        width: "100%", maxWidth: 672,
         display: "flex", alignItems: "center", gap: 14, textDecoration: "none",
         background: "linear-gradient(135deg, rgba(247,168,0,0.16), rgba(247,168,0,0.06))",
         border: "1px solid var(--gold)",
@@ -189,7 +190,8 @@ export default function HomePage() {
       </Link>
 
       {/* ── Passport CTA (register/sign in lives on the Passport tab) ── */}
-      <Link href="/my-passport" className="page-container" style={{
+      <Link href="/my-passport" style={{
+        width: "100%", maxWidth: 672,
         display: "flex", alignItems: "center", gap: 14, textDecoration: "none",
         background: "var(--fhsu-black)",
         borderRadius: 14, padding: "16px 18px", marginBottom: 28,
@@ -206,8 +208,26 @@ export default function HomePage() {
         <ArrowRight size={17} color="var(--fhsu-gold)" strokeWidth={2} aria-hidden="true" style={{ flexShrink: 0 }} />
       </Link>
 
-      <p style={{ fontSize: 11, color: "#AAA", marginTop: 24, textAlign: "center" }}>
-        Presented by {WORKSHOP_INFO.presenters.map((p) => p.name).join(" & ")} · Fort Hays State University
+      {/* ── Location map ── */}
+      <div id="location-map" style={{ width: "100%", maxWidth: 672, marginBottom: 28, scrollMarginTop: 20 }}>
+        <h2 style={{ fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 20, fontWeight: 700, color: "var(--fhsu-black)", marginBottom: 12 }}>
+          Location
+        </h2>
+        <div style={{
+          border: "1px solid #ECECEC", borderRadius: 16, overflow: "hidden",
+          boxShadow: "0 1px 8px rgba(0,0,0,0.04)",
+        }}>
+          <iframe
+            title="American University of Phnom Penh location"
+            src="https://www.google.com/maps?q=American+University+of+Phnom+Penh&output=embed"
+            width="100%" height="220" style={{ border: 0, display: "block" }}
+            loading="lazy" referrerPolicy="no-referrer-when-downgrade"
+          />
+        </div>
+      </div>
+
+      <p style={{ fontSize: 11, color: "#AAA", textAlign: "center" }}>
+        Developed by <a href="https://rattnak.com" target="_blank" rel="noopener noreferrer" style={{ color: "#AAA", textDecoration: "underline" }}>Chanrattnak Mong</a>
       </p>
     </main>
   );
