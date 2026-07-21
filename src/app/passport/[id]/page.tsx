@@ -342,24 +342,29 @@ function PassportPageContent() {
               </p>
             </div>
           ) : (
-            <div className="slide-up" style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              {/* Completion banner — green signals success/done, distinct from
-                  the gold used for branding elsewhere on this page */}
+            <div className="slide-up" style={{
+              background: "white", border: "1px solid #ECECEC", borderRadius: 16,
+              padding: 16, boxShadow: "0 1px 8px rgba(0,0,0,0.04)",
+              display: "flex", flexDirection: "column", gap: 14,
+            }}>
+              {/* Completion banner — light success-green background is the
+                  standard convention (dark backgrounds read as alerts, not
+                  celebration); icon and heading carry the accent color */}
               <div style={{
-                background: "var(--fhsu-black)", borderRadius: 16, padding: "16px 18px",
+                background: "#EFFBF3", borderRadius: 12, padding: "14px 16px",
                 display: "flex", alignItems: "center", gap: 14,
-                border: "1.5px solid #2E9E5B",
+                border: "1px solid #B7E9C6",
               }}>
                 <div style={{
-                  width: 44, height: 44, borderRadius: "50%", flexShrink: 0,
-                  background: "rgba(46,158,91,0.16)",
+                  width: 40, height: 40, borderRadius: "50%", flexShrink: 0,
+                  background: "#DFF5E5",
                   display: "flex", alignItems: "center", justifyContent: "center",
                 }}>
-                  <CheckCircle2 size={24} color="#3FC87A" strokeWidth={2.2} aria-hidden="true" />
+                  <CheckCircle2 size={22} color="#1E9E4A" strokeWidth={2.2} aria-hidden="true" />
                 </div>
                 <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: 14, fontWeight: 800, color: "#3FC87A" }}>Passport Complete!</p>
-                  <p style={{ fontSize: 11.5, color: "rgba(255,255,255,0.65)", marginTop: 2 }}>
+                  <p style={{ fontSize: 14, fontWeight: 800, color: "#166534" }}>Passport Complete!</p>
+                  <p style={{ fontSize: 11.5, color: "#3F6212", marginTop: 2 }}>
                     Post your achievement — add a personal reflection if you like.
                   </p>
                 </div>
