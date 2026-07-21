@@ -61,32 +61,32 @@ function readStoredSession(): SessionState {
 
 export function SessionProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  // Lazy initializer so a cached session renders immediately on first
-  // paint (no signed-out flash) — localStorage isn't available during SSR,
-  // but this function only runs client-side, after hydration starts.
-  const [state, setState] = useState<SessionState>(readStoredSession);
+  // Must start signed-out (matching what the server renders, since
+  // localStorage doesn't exist there) — a lazy useState initializer runs
+  // during the client's first render too, which React then diffs against
+  // the server HTML during hydration and treats as a mismatch if it
+  // differs. Restoring inside an effect instead means this render happens
+  // strictly after hydration, so it never gets compared to server output.
+  const [state, setState] = useState<SessionState>(SIGNED_OUT);
 
-  // Re-check the restored session against the database — a locally cached
-  // session can outlive the participant it points to (deleted,
-  // re-registered, never verified), which would otherwise show a name in
-  // the navbar for an account that no other page can actually find.
+  // Restore the cached session, then re-check it against the database — a
+  // locally cached session can outlive the participant it points to
+  // (deleted, re-registered, never verified), which would otherwise show a
+  // name in the navbar for an account that no other page can actually find.
   useEffect(() => {
-    if (!state.email) return;
-    const { email, participantId } = state;
+    const restored = readStoredSession();
+    if (!restored.email) return;
+    setState(restored);
 
-    fetch(`/api/participant-by-email?email=${encodeURIComponent(email)}`)
+    fetch(`/api/participant-by-email?email=${encodeURIComponent(restored.email)}`)
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        const stillValid = data && data.verified && data.id === participantId;
+        const stillValid = data && data.verified && data.id === restored.participantId;
         if (stillValid) return;
         setState(SIGNED_OUT);
         clearStoredSession();
       })
       .catch(() => {}); // offline/network error — keep the cached session rather than sign out
-    // Runs once on mount only — re-validating on every state change (e.g.
-    // right after signIn sets it) would immediately re-fetch what signIn
-    // already just confirmed.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const signIn = useCallback(async (rawEmail: string) => {
