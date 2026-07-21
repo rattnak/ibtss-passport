@@ -20,11 +20,17 @@ export default function AdminStationPage() {
   const sc = STATION_COLORS[Number(stationId) - 1];
   const Icon = station ? STATION_ICONS[Number(stationId) - 1] : null;
   const [qrDataUrl, setQrDataUrl] = useState("");
+  const [stampUrl, setStampUrl] = useState("");
 
+  // window.location is only available client-side; reading it during the
+  // first render made this render differ from the server-rendered HTML and
+  // triggered a hydration mismatch. Setting it in an effect runs only after
+  // hydration completes.
   useEffect(() => {
     if (!station) return;
-    const stampUrl = `${window.location.origin}/stamp/${station.id}`;
-    QRCode.toDataURL(stampUrl, {
+    const url = `${window.location.origin}/stamp/${station.id}`;
+    setStampUrl(url);
+    QRCode.toDataURL(url, {
       width: 400, margin: 2,
       color: { dark: "#000000", light: "#FFFFFF" },
     }).then(setQrDataUrl);
@@ -38,10 +44,8 @@ export default function AdminStationPage() {
     );
   }
 
-  const stampUrl = typeof window !== "undefined" ? `${window.location.origin}/stamp/${station.id}` : "";
-
   return (
-    <main className="min-h-full flex flex-col items-center px-4 pt-4 pb-10" style={{ background: "white" }}>
+    <main className="min-h-full flex flex-col items-center px-4 pt-4 pb-8" style={{ background: "white" }}>
       <div className="page-container">
         <Link href="/admin" className="print:hidden" style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "#666", fontSize: 13, textDecoration: "none", marginBottom: 20, minHeight: 44 }}>
           <ChevronLeft size={15} strokeWidth={2} aria-hidden="true" /> All Stations
