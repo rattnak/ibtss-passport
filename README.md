@@ -93,7 +93,7 @@ third-party auth provider.
 **Who's authorized:** set `ADMIN_ALLOWED_EMAILS` as a comma-separated list, e.g.:
 
 ```env
-ADMIN_ALLOWED_EMAILS=jeni.mcray@fhsu.edu,magdalene.moy@fhsu.edu
+ADMIN_ALLOWED_EMAILS=facilitator1@fhsu.edu,facilitator2@fhsu.edu
 ```
 
 **Secret:** `ADMIN_TOKEN_SECRET` signs the magic-link and session tokens (HMAC-SHA256, no extra dependency, no database table required). Set it to a long random string — e.g. generate one with:
@@ -156,8 +156,8 @@ Run `supabase-schema.sql` in your Supabase project's SQL Editor. This creates:
 6. Print QR pages from `/admin/station/1`, `/admin/station/2`, `/admin/station/3`
 
 ### Before the Event
-- Verify `fhsu.edu` domain in [Resend](https://resend.com) so emails reach all participants (not just your own address)
-- Update the `from` address in `src/lib/email.ts` from `onboarding@resend.dev` to `noreply@fhsu.edu`
+- Verify a domain you control in [Resend](https://resend.com) so emails reach all participants (Resend's sandbox sender only delivers to the account owner's own address)
+- Update the `from` address in `src/lib/email.ts` to use your verified domain
 
 ---
 
