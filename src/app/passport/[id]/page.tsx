@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
   BookOpen, Settings2, Search, CheckCircle2, Circle,
-  Share2, Copy, ExternalLink, Lock, ArrowRight, LogOut,
+  Share2, Copy, Lock, ArrowRight, LogOut,
 } from "lucide-react";
 import { STATIONS } from "@/lib/stations";
 import CredlyBadgeCard from "@/components/CredlyBadgeCard";
@@ -49,8 +49,17 @@ function PassportPageContent() {
   const [copied, setCopied] = useState(false);
   const [captionCopied, setCaptionCopied] = useState(false);
   const [newlyStamped] = useState<number | null>(null);
+  const [passportUrl, setPassportUrl] = useState("");
   const wasOwner = useRef(false);
   const signedInFromVerify = useRef(false);
+
+  // window.location is only available client-side; reading it during the
+  // first render (or via a typeof-window ternary in the render body) makes
+  // that render differ from the server-rendered HTML and triggers a
+  // hydration mismatch. Setting it in an effect runs only after hydration.
+  useEffect(() => {
+    setPassportUrl(window.location.href);
+  }, []);
 
   useEffect(() => {
     fetch(`/api/passport/${id}`)
@@ -121,7 +130,6 @@ function PassportPageContent() {
   const completed = (progress.stations_completed ?? []).filter(
     (s): s is number => s !== null
   );
-  const passportUrl = typeof window !== "undefined" ? window.location.href : "";
 
   function buildLinkedInUrl() {
     // LinkedIn's share dialog no longer accepts pre-filled post text (title/summary
@@ -190,7 +198,7 @@ function PassportPageContent() {
                   </div>
                   <div>
                     <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 8.5, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 2 }}>Issued by</p>
-                    <p style={{ color: "white", fontSize: 11.5, fontWeight: 600 }}>Fort Hays State University</p>
+                    <a href="https://fhsu.edu/" target="_blank" rel="noopener noreferrer" style={{ color: "white", fontSize: 11.5, fontWeight: 600, textDecoration: "underline" }}>Fort Hays State University</a>
                   </div>
                   <div>
                     <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 8.5, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 2 }}>Status</p>
@@ -274,7 +282,8 @@ function PassportPageContent() {
               const isNew = newlyStamped === station.id;
               const tilt = [-5, 4, -3][i];
               return (
-                <div key={station.id} style={{
+                <Link key={station.id} href={`/stations?station=${station.id}`} className="stamp-tap" style={{
+                  display: "block", textDecoration: "none",
                   background: "white", border: "1px solid #ECECEC", borderRadius: 16,
                   padding: "16px 8px 12px", textAlign: "center",
                   boxShadow: stamped ? "0 2px 12px rgba(0,0,0,0.07)" : "0 1px 4px rgba(0,0,0,0.03)",
@@ -320,7 +329,7 @@ function PassportPageContent() {
                       ? <CheckCircle2 size={16} color={sc.color} strokeWidth={2.5} aria-label="Collected" style={{ display: "inline" }} />
                       : <Circle size={16} color="#D8D8D8" strokeWidth={1.5} aria-label="Not collected" style={{ display: "inline" }} />}
                   </p>
-                </div>
+                </Link>
               );
             })}
           </div>
@@ -344,33 +353,26 @@ function PassportPageContent() {
             </>
           ) : (
             <div className="slide-up" style={{
-              background: "white", border: "1px solid #ECECEC", borderRadius: 16,
+              background: "rgba(247,168,0,0.08)", border: "1.5px solid rgba(247,168,0,0.3)", borderRadius: 16,
               padding: 16, boxShadow: "0 1px 8px rgba(0,0,0,0.04)",
               display: "flex", flexDirection: "column", gap: 14,
               marginTop: 24,
             }}>
-              <h2 style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: "#999" }}>
+              <h2 style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: "var(--gold-text)" }}>
                 Share Your Achievement
               </h2>
 
-              {/* Completion banner — light success-green background is the
-                  standard convention (dark backgrounds read as alerts, not
-                  celebration); icon and heading carry the accent color */}
+              {/* Completion status — sits directly on the tinted card
+                  background; icon color is the only success signal, kept
+                  minimal rather than introducing another colored panel */}
               <div style={{
-                background: "#EFFBF3", borderRadius: 12, padding: "14px 16px",
-                display: "flex", alignItems: "center", gap: 14,
-                border: "1px solid #B7E9C6",
+                display: "flex", alignItems: "center", gap: 12,
+                paddingBottom: 14, borderBottom: "1px solid rgba(247,168,0,0.25)",
               }}>
-                <div style={{
-                  width: 40, height: 40, borderRadius: "50%", flexShrink: 0,
-                  background: "#DFF5E5",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                }}>
-                  <CheckCircle2 size={22} color="#1E9E4A" strokeWidth={2.2} aria-hidden="true" />
-                </div>
+                <CheckCircle2 size={22} color="#1E9E4A" strokeWidth={2.2} aria-hidden="true" style={{ flexShrink: 0 }} />
                 <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: 14, fontWeight: 800, color: "#166534" }}>Passport Complete!</p>
-                  <p style={{ fontSize: 11.5, color: "#3F6212", marginTop: 2 }}>
+                  <p style={{ fontSize: 14, fontWeight: 700, color: "var(--fhsu-black)" }}>Passport Complete!</p>
+                  <p style={{ fontSize: 12, color: "#6B6B6B", marginTop: 2 }}>
                     Post your achievement — add a personal reflection if you like.
                   </p>
                 </div>
@@ -381,7 +383,7 @@ function PassportPageContent() {
               {/* Reflection + preview */}
               <div>
                 <label htmlFor="reflection" style={{ display: "block", fontSize: 13, fontWeight: 600, color: "var(--fhsu-black)", marginBottom: 6 }}>
-                  Add a personal reflection <span style={{ fontWeight: 400, color: "#999" }}>(optional)</span>
+                  Add a personal reflection <span style={{ fontWeight: 400, color: "#6B6B6B" }}>(optional)</span>
                 </label>
                 <textarea
                   id="reflection" value={reflection} onChange={(e) => setReflection(e.target.value)}
@@ -389,73 +391,84 @@ function PassportPageContent() {
                   rows={3}
                   style={{
                     width: "100%", border: "1.5px solid #CCCCCC", borderRadius: 12,
-                    padding: "12px 14px", fontSize: 16, fontFamily: "inherit",
+                    padding: "12px 14px", fontSize: 13, fontFamily: "inherit",
                     background: "white", color: "#1a1a1a", resize: "vertical", lineHeight: 1.5,
                   }}
                 />
               </div>
-              <div style={{
-                position: "relative", background: "rgba(247,168,0,0.05)",
-                border: "1.5px solid rgba(247,168,0,0.35)", borderRadius: 14,
-                padding: "14px 16px",
-              }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-                  <p style={{ fontSize: 10, fontWeight: 700, color: "var(--gold-text)", textTransform: "uppercase", letterSpacing: 1 }}>
-                    Caption
-                  </p>
+
+              <div>
+                <label htmlFor="caption-preview" style={{ display: "block", fontSize: 13, fontWeight: 600, color: "var(--fhsu-black)", marginBottom: 6 }}>
+                  Caption
+                </label>
+                {/* Single bordered box owns both the text and the copy
+                    control — the button is anchored inside its top-right
+                    corner, the same relationship a code block's copy
+                    button has to its content. */}
+                <div style={{
+                  position: "relative",
+                  border: "1.5px solid rgba(247,168,0,0.3)", borderRadius: 12,
+                  background: "white",
+                }}>
                   <button
                     onClick={copyCaption}
-                    aria-label={captionCopied ? "Caption copied" : "Copy caption"}
-                    title={captionCopied ? "Copied!" : "Copy"}
+                    aria-label={captionCopied ? "Caption copied to clipboard" : "Copy caption to clipboard"}
                     style={{
-                      display: "flex", alignItems: "center", gap: 5,
-                      background: captionCopied ? "var(--fhsu-gold)" : "white",
-                      color: captionCopied ? "var(--fhsu-black)" : "#666",
-                      border: "1px solid " + (captionCopied ? "var(--fhsu-gold)" : "#DDD"),
-                      borderRadius: 8, padding: "5px 9px", minHeight: 30,
+                      position: "absolute", top: 8, right: 8,
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: 5,
+                      background: captionCopied ? "rgba(247,168,0,0.14)" : "white",
+                      color: captionCopied ? "var(--gold-text)" : "var(--fhsu-black)",
+                      border: "1.5px solid " + (captionCopied ? "var(--fhsu-gold)" : "rgba(247,168,0,0.3)"),
+                      borderRadius: 8, padding: "5px 10px", minHeight: 28,
                       fontSize: 11.5, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
-                      transition: "background 0.15s, border-color 0.15s",
                     }}
                   >
-                    {captionCopied ? <CheckCircle2 size={13} strokeWidth={2.5} aria-hidden="true" /> : <Copy size={13} strokeWidth={2} aria-hidden="true" />}
-                    {captionCopied ? "Copied" : "Copy"}
+                    <Copy size={12} strokeWidth={2} aria-hidden="true" />
+                    <span aria-live="polite">{captionCopied ? "Copied!" : "Copy"}</span>
                   </button>
+                  <p id="caption-preview" style={{
+                    fontSize: 13, color: "#333", lineHeight: 1.6, whiteSpace: "pre-wrap",
+                    padding: "14px 90px 14px 14px", margin: 0,
+                  }}>
+                    {fullCaption()}
+                  </p>
                 </div>
-                <p style={{ fontSize: 12.5, color: "#555", lineHeight: 1.6, whiteSpace: "pre-wrap" }}>
-                  {fullCaption()}
+                <p style={{ fontSize: 11.5, color: "#6B6B6B", lineHeight: 1.5, marginTop: 8, padding: "0 14px" }}>
+                  Copy the caption above, then paste it into the post LinkedIn opens.
                 </p>
               </div>
 
-              {/* Actions — LinkedIn is the primary CTA of this section, so it
-                  gets a lift/shadow the secondary copy-link button doesn't */}
-              <a
-                href={buildLinkedInUrl()} target="_blank" rel="noopener noreferrer"
-                style={{
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
-                  background: "#0A66C2", color: "white", textDecoration: "none",
-                  borderRadius: 14, padding: 15, fontSize: 15, fontWeight: 700, minHeight: 52,
-                  boxShadow: "0 6px 20px rgba(10,102,194,0.35)",
-                }}
-              >
-                <svg style={{ width: 20, height: 20, flexShrink: 0 }} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                </svg>
-                Open LinkedIn to Post
-                <ExternalLink size={14} strokeWidth={2} style={{ opacity: 0.7 }} aria-hidden="true" />
-              </a>
-              <button
-                onClick={copyLink}
-                style={{
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                  background: "white", color: "var(--fhsu-black)",
-                  border: "1.5px solid #CCCCCC", borderRadius: 14,
-                  padding: "13px 0", minHeight: 48, fontSize: 14, fontWeight: 600,
-                  cursor: "pointer", fontFamily: "inherit",
-                }}
-              >
-                <Copy size={16} strokeWidth={2} aria-hidden="true" />
-                {copied ? "Link copied!" : "Copy shareable link"}
-              </button>
+              {/* Actions — copy-link is secondary, so it sits to the side of
+                  the primary LinkedIn CTA rather than stacked below it */}
+              <div style={{ display: "flex", gap: 10 }}>
+                <button
+                  onClick={copyLink}
+                  style={{
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                    flex: 1, background: "white", color: "var(--fhsu-black)",
+                    border: "1.5px solid #CCCCCC", borderRadius: 14,
+                    padding: "13px 0", minHeight: 52, fontSize: 14, fontWeight: 600,
+                    cursor: "pointer", fontFamily: "inherit",
+                  }}
+                >
+                  <Copy size={16} strokeWidth={2} aria-hidden="true" />
+                  {copied ? "Copied!" : "Copy link"}
+                </button>
+                <a
+                  href={buildLinkedInUrl()} target="_blank" rel="noopener noreferrer"
+                  style={{
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                    flex: 1.4, background: "#0A66C2", color: "white", textDecoration: "none",
+                    borderRadius: 14, padding: 15, fontSize: 14, fontWeight: 700, minHeight: 52,
+                    boxShadow: "0 6px 20px rgba(10,102,194,0.35)",
+                  }}
+                >
+                  <svg style={{ width: 18, height: 18, flexShrink: 0 }} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                  </svg>
+                  Share on LinkedIn
+                </a>
+              </div>
             </div>
           )}
 
@@ -468,11 +481,14 @@ function PassportPageContent() {
               onClick={handleSignOut}
               style={{
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                width: "100%", background: "none", color: "#888",
+                margin: "20px auto 0", background: "white", color: "#888",
                 border: "1px solid #DDD", borderRadius: 12,
-                padding: "12px 0", minHeight: 44, fontSize: 13, fontWeight: 600,
-                cursor: "pointer", fontFamily: "inherit", marginTop: 20,
+                padding: "10px 20px", minHeight: 40, fontSize: 13, fontWeight: 600,
+                cursor: "pointer", fontFamily: "inherit",
+                transition: "color 0.15s, border-color 0.15s, background 0.15s",
               }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = "white"; e.currentTarget.style.borderColor = "#C0392B"; e.currentTarget.style.background = "#C0392B"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = "#888"; e.currentTarget.style.borderColor = "#DDD"; e.currentTarget.style.background = "white"; }}
             >
               <LogOut size={14} strokeWidth={2} aria-hidden="true" /> Sign out
             </button>
