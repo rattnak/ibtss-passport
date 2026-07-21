@@ -326,27 +326,33 @@ function PassportPageContent() {
           </div>
 
           {/* ── Share (inline, same page) ── */}
-          <h2 style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: "#999", margin: "24px 0 12px" }}>
-            Share Your Achievement
-          </h2>
-
           {!progress.is_complete ? (
-            <div style={{
-              display: "flex", alignItems: "center", gap: 12,
-              background: "#FAFAFA", border: "1px dashed #D8D8D8", borderRadius: 14,
-              padding: "14px 16px",
-            }}>
-              <Lock size={18} color="#999" strokeWidth={2} aria-hidden="true" style={{ flexShrink: 0 }} />
-              <p style={{ fontSize: 13, color: "#767676", lineHeight: 1.55 }}>
-                Sharing unlocks when all 3 stamps are collected — {3 - completed.length} to go.
-              </p>
-            </div>
+            <>
+              <h2 style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: "#999", margin: "24px 0 12px" }}>
+                Share Your Achievement
+              </h2>
+              <div style={{
+                display: "flex", alignItems: "center", gap: 12,
+                background: "#FAFAFA", border: "1px dashed #D8D8D8", borderRadius: 14,
+                padding: "14px 16px",
+              }}>
+                <Lock size={18} color="#999" strokeWidth={2} aria-hidden="true" style={{ flexShrink: 0 }} />
+                <p style={{ fontSize: 13, color: "#767676", lineHeight: 1.55 }}>
+                  Sharing unlocks when all 3 stamps are collected — {3 - completed.length} to go.
+                </p>
+              </div>
+            </>
           ) : (
             <div className="slide-up" style={{
               background: "white", border: "1px solid #ECECEC", borderRadius: 16,
               padding: 16, boxShadow: "0 1px 8px rgba(0,0,0,0.04)",
               display: "flex", flexDirection: "column", gap: 14,
+              marginTop: 24,
             }}>
+              <h2 style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: "#999" }}>
+                Share Your Achievement
+              </h2>
+
               {/* Completion banner — light success-green background is the
                   standard convention (dark backgrounds read as alerts, not
                   celebration); icon and heading carry the accent color */}
@@ -419,9 +425,6 @@ function PassportPageContent() {
                   {fullCaption()}
                 </p>
               </div>
-              <p style={{ fontSize: 11.5, color: "#999", lineHeight: 1.5, margin: "-6px 0 0" }}>
-                LinkedIn no longer accepts pre-filled post text — copy the caption above, then paste it into the post LinkedIn opens.
-              </p>
 
               {/* Actions — LinkedIn is the primary CTA of this section, so it
                   gets a lift/shadow the secondary copy-link button doesn't */}
