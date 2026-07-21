@@ -4,7 +4,7 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
-  BookOpen, Settings2, Search, Trophy, CheckCircle2, Circle,
+  BookOpen, Settings2, Search, CheckCircle2, Circle,
   Share2, Copy, ExternalLink, Lock, ArrowRight, LogOut,
 } from "lucide-react";
 import { STATIONS } from "@/lib/stations";
@@ -190,7 +190,7 @@ function PassportPageContent() {
                   </div>
                   <div>
                     <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 8.5, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 2 }}>Issued by</p>
-                    <p style={{ color: "white", fontSize: 11.5, fontWeight: 600 }}>FHSU</p>
+                    <p style={{ color: "white", fontSize: 11.5, fontWeight: 600 }}>Fort Hays State University</p>
                   </div>
                   <div>
                     <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 8.5, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 2 }}>Status</p>
@@ -343,15 +343,22 @@ function PassportPageContent() {
             </div>
           ) : (
             <div className="slide-up" style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              {/* Completion banner */}
+              {/* Completion banner — green signals success/done, distinct from
+                  the gold used for branding elsewhere on this page */}
               <div style={{
                 background: "var(--fhsu-black)", borderRadius: 16, padding: "16px 18px",
                 display: "flex", alignItems: "center", gap: 14,
-                border: "1.5px solid var(--fhsu-gold)",
+                border: "1.5px solid #2E9E5B",
               }}>
-                <Trophy size={26} color="var(--fhsu-gold)" strokeWidth={2} aria-hidden="true" />
+                <div style={{
+                  width: 44, height: 44, borderRadius: "50%", flexShrink: 0,
+                  background: "rgba(46,158,91,0.16)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                }}>
+                  <CheckCircle2 size={24} color="#3FC87A" strokeWidth={2.2} aria-hidden="true" />
+                </div>
                 <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: 14, fontWeight: 800, color: "var(--fhsu-gold)" }}>Passport Complete!</p>
+                  <p style={{ fontSize: 14, fontWeight: 800, color: "#3FC87A" }}>Passport Complete!</p>
                   <p style={{ fontSize: 11.5, color: "rgba(255,255,255,0.65)", marginTop: 2 }}>
                     Post your achievement — add a personal reflection if you like.
                   </p>
@@ -376,38 +383,50 @@ function PassportPageContent() {
                   }}
                 />
               </div>
-              <div style={{ background: "#FAFAFA", border: "1px solid #ECECEC", borderRadius: 12, padding: "12px 14px" }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>
-                  Caption — copy this into your post
-                </p>
-                <p style={{ fontSize: 12.5, color: "#555", lineHeight: 1.6, whiteSpace: "pre-wrap", marginBottom: 10 }}>
+              <div style={{
+                position: "relative", background: "rgba(247,168,0,0.05)",
+                border: "1.5px solid rgba(247,168,0,0.35)", borderRadius: 14,
+                padding: "14px 16px",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                  <p style={{ fontSize: 10, fontWeight: 700, color: "var(--gold-text)", textTransform: "uppercase", letterSpacing: 1 }}>
+                    Caption
+                  </p>
+                  <button
+                    onClick={copyCaption}
+                    aria-label={captionCopied ? "Caption copied" : "Copy caption"}
+                    title={captionCopied ? "Copied!" : "Copy"}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 5,
+                      background: captionCopied ? "var(--fhsu-gold)" : "white",
+                      color: captionCopied ? "var(--fhsu-black)" : "#666",
+                      border: "1px solid " + (captionCopied ? "var(--fhsu-gold)" : "#DDD"),
+                      borderRadius: 8, padding: "5px 9px", minHeight: 30,
+                      fontSize: 11.5, fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+                      transition: "background 0.15s, border-color 0.15s",
+                    }}
+                  >
+                    {captionCopied ? <CheckCircle2 size={13} strokeWidth={2.5} aria-hidden="true" /> : <Copy size={13} strokeWidth={2} aria-hidden="true" />}
+                    {captionCopied ? "Copied" : "Copy"}
+                  </button>
+                </div>
+                <p style={{ fontSize: 12.5, color: "#555", lineHeight: 1.6, whiteSpace: "pre-wrap" }}>
                   {fullCaption()}
                 </p>
-                <button
-                  onClick={copyCaption}
-                  style={{
-                    display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-                    width: "100%", background: "white", color: "var(--fhsu-black)",
-                    border: "1.5px solid #CCCCCC", borderRadius: 10,
-                    padding: "10px 0", minHeight: 40, fontSize: 12.5, fontWeight: 600,
-                    cursor: "pointer", fontFamily: "inherit",
-                  }}
-                >
-                  <Copy size={14} strokeWidth={2} aria-hidden="true" />
-                  {captionCopied ? "Caption copied!" : "Copy caption"}
-                </button>
               </div>
               <p style={{ fontSize: 11.5, color: "#999", lineHeight: 1.5, margin: "-6px 0 0" }}>
                 LinkedIn no longer accepts pre-filled post text — copy the caption above, then paste it into the post LinkedIn opens.
               </p>
 
-              {/* Actions */}
+              {/* Actions — LinkedIn is the primary CTA of this section, so it
+                  gets a lift/shadow the secondary copy-link button doesn't */}
               <a
                 href={buildLinkedInUrl()} target="_blank" rel="noopener noreferrer"
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
                   background: "#0A66C2", color: "white", textDecoration: "none",
                   borderRadius: 14, padding: 15, fontSize: 15, fontWeight: 700, minHeight: 52,
+                  boxShadow: "0 6px 20px rgba(10,102,194,0.35)",
                 }}
               >
                 <svg style={{ width: 20, height: 20, flexShrink: 0 }} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
