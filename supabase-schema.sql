@@ -21,8 +21,11 @@ create table if not exists stamps (
   unique(participant_id, station_id)
 );
 
--- View to check completion
-create or replace view passport_progress as
+-- View to check completion. security_invoker makes the view run with the
+-- querying role's own permissions (and RLS policies) instead of the view
+-- owner's — required for it to actually respect the tables' RLS below.
+create or replace view passport_progress
+with (security_invoker = true) as
 select
   p.id,
   p.name,
@@ -44,7 +47,11 @@ create table if not exists toolkit_responses (
   unique(participant_id, section_id)
 );
 
--- Enable Row Level Security (open for demo; tighten for production)
+-- Row Level Security: deny-by-default. The app never queries Supabase from
+-- the browser — every read/write goes through Next.js API routes using the
+-- service role key, which bypasses RLS entirely. So the anon/public key
+-- (visible in client bundles) should have no direct table access at all;
+-- with RLS enabled and no policies, every request from that key is denied.
 alter table participants enable row level security;
 alter table stamps enable row level security;
 alter table toolkit_responses enable row level security;
@@ -52,7 +59,3 @@ alter table toolkit_responses enable row level security;
 drop policy if exists "Allow all" on participants;
 drop policy if exists "Allow all" on stamps;
 drop policy if exists "Allow all" on toolkit_responses;
-
-create policy "Allow all" on participants for all using (true) with check (true);
-create policy "Allow all" on stamps for all using (true) with check (true);
-create policy "Allow all" on toolkit_responses for all using (true) with check (true);
