@@ -1,10 +1,9 @@
 "use client";
 
-import { useCallback, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { Suspense, useCallback, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
-  BookOpen, Settings2, Search, ChevronDown, ChevronLeft,
+  BookOpen, Settings2, Search, ChevronDown,
   ExternalLink, Stamp, Timer, ScanLine, CheckCircle2, Trophy, LogIn,
 } from "lucide-react";
 import { STATIONS, getStation } from "@/lib/stations";
@@ -38,12 +37,30 @@ function parseStationId(text: string): number | null {
 }
 
 export default function StationsPage() {
+  return (
+    <Suspense fallback={null}>
+      <StationsPageContent />
+    </Suspense>
+  );
+}
+
+function StationsPageContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { email, participantId, openSignIn } = useSession();
   const [openId, setOpenId] = useState<number | null>(null);
   const [scanning, setScanning] = useState(false);
   const [stamping, setStamping] = useState(false);
   const [result, setResult] = useState<StampResult | null>(null);
+
+  // Coming from a passport-page stamp link (?station=2) opens that
+  // station's card directly and scrolls it into view.
+  useEffect(() => {
+    const stationParam = Number(searchParams.get("station"));
+    if (!stationParam || !getStation(stationParam)) return;
+    setOpenId(stationParam);
+    document.getElementById(`station-${stationParam}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [searchParams]);
 
   const stamp = useCallback(async (stationId: number) => {
     if (!participantId) { openSignIn(); return; }
@@ -77,10 +94,6 @@ export default function StationsPage() {
   return (
     <main className="min-h-full flex flex-col items-center px-4 pt-4 pb-8" style={{ background: "white" }}>
       <div className="page-container">
-
-        <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "#666", fontSize: 13, textDecoration: "none", marginBottom: 18, minHeight: 44 }}>
-          <ChevronLeft size={15} strokeWidth={2} aria-hidden="true" /> Back to Agenda
-        </Link>
 
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 20 }}>
@@ -177,12 +190,13 @@ export default function StationsPage() {
             const sc = STATION_COLORS[i];
             const open = openId === station.id;
             return (
-              <div key={station.id} style={{
+              <div key={station.id} id={`station-${station.id}`} style={{
                 background: "white",
                 border: "1px solid #E8E8E8",
                 borderLeft: `4px solid ${sc.color}`,
                 borderRadius: 14, overflow: "hidden",
                 boxShadow: "0 1px 6px rgba(0,0,0,0.04)",
+                scrollMarginTop: 20,
               }}>
                 <button
                   onClick={() => setOpenId(open ? null : station.id)}

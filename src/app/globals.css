@@ -103,6 +103,21 @@ html, body {
   animation: inkPress 0.65s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
 }
 
+/* Tap/hover feedback for interactive stamp circles (links to the station) */
+.stamp-tap {
+  transition: transform 0.15s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.stamp-tap:hover {
+  transform: scale(1.06);
+}
+.stamp-tap:active {
+  transform: scale(0.94);
+}
+@media (prefers-reduced-motion: reduce) {
+  .stamp-tap { transition: none; }
+  .stamp-tap:hover, .stamp-tap:active { transform: none; }
+}
+
 /* Slide-up entrance */
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(14px); }
