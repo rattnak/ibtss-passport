@@ -173,11 +173,11 @@ function PassportPageContent() {
   }
 
   return (
-    <main style={{ flex: 1, background: "white", display: "flex", flexDirection: "column", alignItems: "center" }}>
+    <main className="px-4" style={{ flex: 1, background: "white", display: "flex", flexDirection: "column", alignItems: "center" }}>
       <div style={{ width: "100%", maxWidth: 672, display: "flex", flexDirection: "column", flex: 1 }}>
 
         {/* ── ID page hero ── */}
-        <div className="passport-cover-bg" style={{ padding: "20px 16px 18px", margin: "16px 16px 0", borderRadius: 22 }}>
+        <div className="passport-cover-bg" style={{ padding: "20px 0 18px", marginTop: 16, borderRadius: 22 }}>
           <div style={{
             border: "1.5px solid rgba(247,168,0,0.5)", borderRadius: 22,
             padding: "18px 16px 12px", position: "relative", overflow: "hidden",
@@ -245,13 +245,13 @@ function PassportPageContent() {
         </div>
 
         {/* ── Body ── */}
-        <div style={{ padding: "20px 16px 32px" }}>
+        <div style={{ padding: "20px 0 32px" }}>
 
           {/* Progress ring (with its instruction stacked beneath it) and
               the 3 station stamps share one outer bordered container, laid
               out in a row — each stamp keeps its own inner border/shadow
               for a clear interactive boundary and full-size tap target. */}
-          <h2 style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: "#999", marginBottom: 12 }}>
+          <h2 style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase", color: "#999", marginBottom: 12 }}>
             Station Stamps
           </h2>
           <div style={{
@@ -354,7 +354,7 @@ function PassportPageContent() {
           {/* ── Share (inline, same page) ── */}
           {!progress.is_complete ? (
             <>
-              <h2 style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: "#999", margin: "24px 0 12px" }}>
+              <h2 style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase", color: "#999", margin: "24px 0 12px" }}>
                 Share Your Achievement
               </h2>
               <div style={{
@@ -370,7 +370,7 @@ function PassportPageContent() {
             </>
           ) : (
             <>
-              <h2 style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: "var(--gold-text)", margin: "24px 0 12px" }}>
+              <h2 style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase", color: "var(--gold-text)", margin: "24px 0 12px" }}>
                 Share Your Achievement
               </h2>
               <div className="slide-up" style={{
