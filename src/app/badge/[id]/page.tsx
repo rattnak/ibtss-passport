@@ -94,7 +94,7 @@ export default function BadgePage() {
               transparent watermark, not just a flat padded panel. */}
           <div className="passport-cover-bg" style={{ padding: "20px 16px 18px" }}>
             <div style={{
-              border: "1.5px solid rgba(247,168,0,0.5)", borderRadius: 14,
+              border: "1.5px solid rgba(247,168,0,0.5)", borderRadius: 22,
               padding: "18px 16px 12px", position: "relative", overflow: "hidden",
               background: "linear-gradient(160deg, rgba(255,255,255,0.04) 0%, transparent 100%)",
             }}>
