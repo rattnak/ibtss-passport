@@ -177,7 +177,7 @@ function PassportPageContent() {
       <div style={{ width: "100%", maxWidth: 672, display: "flex", flexDirection: "column", flex: 1 }}>
 
         {/* ── ID page hero ── */}
-        <div className="passport-cover-bg" style={{ padding: "20px 16px 18px" }}>
+        <div className="passport-cover-bg" style={{ padding: "20px 16px 18px", margin: "16px 16px 0", borderRadius: 22 }}>
           <div style={{
             border: "1.5px solid rgba(247,168,0,0.5)", borderRadius: 22,
             padding: "18px 16px 12px", position: "relative", overflow: "hidden",
@@ -251,16 +251,14 @@ function PassportPageContent() {
               the 3 station stamps share one outer bordered container, laid
               out in a row — each stamp keeps its own inner border/shadow
               for a clear interactive boundary and full-size tap target. */}
+          <h2 style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: "#999", marginBottom: 12 }}>
+            Station Stamps
+          </h2>
           <div style={{
-            display: "flex", flexDirection: "column", gap: 12,
+            display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: 12,
             background: "white", border: "1px solid #ECECEC", borderRadius: 16,
             padding: "16px", marginBottom: 18, boxShadow: "0 1px 8px rgba(0,0,0,0.04)",
           }}>
-            <h2 style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: "#999" }}>
-              Station Stamps
-            </h2>
-
-            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: 12 }}>
             {/* Ring + instruction */}
             <div style={{
               display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center",
@@ -351,7 +349,6 @@ function PassportPageContent() {
                 </Link>
               );
             })}
-            </div>
           </div>
 
           {/* ── Share (inline, same page) ── */}
@@ -372,16 +369,15 @@ function PassportPageContent() {
               </div>
             </>
           ) : (
-            <div className="slide-up" style={{
-              background: "rgba(247,168,0,0.08)", border: "1.5px solid rgba(247,168,0,0.3)", borderRadius: 16,
-              padding: 16, boxShadow: "0 1px 8px rgba(0,0,0,0.04)",
-              display: "flex", flexDirection: "column", gap: 14,
-              marginTop: 24,
-            }}>
-              <h2 style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: "var(--gold-text)" }}>
+            <>
+              <h2 style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: "var(--gold-text)", margin: "24px 0 12px" }}>
                 Share Your Achievement
               </h2>
-
+              <div className="slide-up" style={{
+                background: "rgba(247,168,0,0.08)", border: "1.5px solid rgba(247,168,0,0.3)", borderRadius: 16,
+                padding: 16, boxShadow: "0 1px 8px rgba(0,0,0,0.04)",
+                display: "flex", flexDirection: "column", gap: 14,
+              }}>
               {/* Completion status — sits directly on the tinted card
                   background; icon color is the only success signal, kept
                   minimal rather than introducing another colored panel */}
@@ -489,7 +485,8 @@ function PassportPageContent() {
                   Share on LinkedIn
                 </a>
               </div>
-            </div>
+              </div>
+            </>
           )}
 
           <p style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, fontSize: 11, color: "#AAA", marginTop: 20 }}>
