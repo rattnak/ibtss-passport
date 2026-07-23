@@ -255,97 +255,108 @@ function PassportPageContent() {
             Station Stamps
           </h2>
           <div style={{
-            display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: 12,
-            background: "white", border: "1px solid #ECECEC", borderRadius: 16,
-            padding: "16px", marginBottom: 18, boxShadow: "0 1px 8px rgba(0,0,0,0.04)",
+            display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: 14,
+            background: "#FAFAFA", border: "1px solid #ECECEC", borderRadius: 18,
+            padding: "16px", marginBottom: 18,
           }}>
-            {/* Ring + instruction */}
+            {/* Ring + instruction — its own tinted panel, set apart from
+                the stamps as the summary metric rather than sized to
+                compete with them */}
             <div style={{
               display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center",
-              flex: "1 1 160px", justifyContent: "center",
+              justifyContent: "center", flex: "1 1 180px",
+              background: "white", border: "1px solid #ECECEC", borderRadius: 16,
+              padding: "20px 16px", boxShadow: "0 1px 6px rgba(0,0,0,0.03)",
             }}>
-              <div style={{ position: "relative", width: 84, height: 84, flexShrink: 0 }}
+              <div style={{ position: "relative", width: 110, height: 110, flexShrink: 0 }}
                 role="img" aria-label={`${completed.length} of 3 stations completed`}>
-                <svg viewBox="0 0 84 84" style={{ width: 84, height: 84, transform: "rotate(-90deg)" }}>
-                  <circle cx="42" cy="42" r="34" fill="none" stroke="#EFEFEF" strokeWidth="8" />
-                  <circle cx="42" cy="42" r="34" fill="none" stroke="var(--fhsu-gold)" strokeWidth="8"
+                <svg viewBox="0 0 110 110" style={{ width: 110, height: 110, transform: "rotate(-90deg)" }}>
+                  <circle cx="55" cy="55" r="46" fill="none" stroke="#EFEFEF" strokeWidth="9" />
+                  <circle cx="55" cy="55" r="46" fill="none" stroke="var(--fhsu-gold)" strokeWidth="9"
                     strokeLinecap="round"
-                    strokeDasharray={2 * Math.PI * 34}
-                    strokeDashoffset={2 * Math.PI * 34 * (1 - completed.length / 3)}
+                    strokeDasharray={2 * Math.PI * 46}
+                    strokeDashoffset={2 * Math.PI * 46 * (1 - completed.length / 3)}
                     style={{ transition: "stroke-dashoffset 0.7s cubic-bezier(0.22,1,0.36,1)" }} />
                 </svg>
                 <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-                  <span style={{ fontSize: 21, fontWeight: 800, color: "var(--fhsu-black)", lineHeight: 1 }}>{completed.length}<span style={{ fontSize: 12, color: "#999", fontWeight: 600 }}>/3</span></span>
-                  <span style={{ fontSize: 8.5, letterSpacing: 1, textTransform: "uppercase", color: "#999", marginTop: 3 }}>Stamps</span>
+                  <span style={{ fontSize: 27, fontWeight: 800, color: "var(--fhsu-black)", lineHeight: 1 }}>{completed.length}<span style={{ fontSize: 14, color: "#999", fontWeight: 600 }}>/3</span></span>
+                  <span style={{ fontSize: 9, letterSpacing: 1, textTransform: "uppercase", color: "#999", marginTop: 3 }}>Stamps</span>
                 </div>
               </div>
-              <p style={{ fontSize: 13.5, fontWeight: 700, color: "var(--fhsu-black)", marginTop: 10, lineHeight: 1.3 }}>
+              <p style={{ fontSize: 14, fontWeight: 700, color: "var(--fhsu-black)", marginTop: 12, lineHeight: 1.3 }}>
                 {progress.is_complete
                   ? "All three lenses collected!"
                   : `${3 - completed.length} station${3 - completed.length !== 1 ? "s" : ""} to go`}
               </p>
               {!progress.is_complete && (
-                <Link href="/stations" style={{ display: "inline-flex", alignItems: "center", gap: 4, marginTop: 4, fontSize: 11.5, fontWeight: 700, color: "var(--gold-text)", textDecoration: "none" }}>
-                  Go to stations <ArrowRight size={11} strokeWidth={2.5} aria-hidden="true" />
+                <Link href="/stations" style={{ display: "inline-flex", alignItems: "center", gap: 4, marginTop: 5, fontSize: 12, fontWeight: 700, color: "var(--gold-text)", textDecoration: "none" }}>
+                  Go to stations <ArrowRight size={12} strokeWidth={2.5} aria-hidden="true" />
                 </Link>
               )}
             </div>
 
-            {/* Stamps */}
-            {STATIONS.map((station, i) => {
-              const Icon = STATION_ICONS[i];
-              const sc = STATION_COLORS[i];
-              const stamped = completed.includes(station.id);
-              const isNew = newlyStamped === station.id;
-              const tilt = [-5, 4, -3][i];
-              return (
-                <Link key={station.id} href={`/stations?station=${station.id}`} className="stamp-tap" style={{
-                  display: "block", textDecoration: "none", flex: "1 1 90px",
-                  background: "white", border: "1px solid #ECECEC", borderRadius: 16,
-                  padding: "14px 6px 10px", textAlign: "center",
-                  boxShadow: stamped ? "0 2px 12px rgba(0,0,0,0.07)" : "0 1px 4px rgba(0,0,0,0.03)",
-                }}>
-                  {stamped ? (
-                    <div className={isNew ? "stamp-animate" : ""} style={{
-                      width: 66, height: 66, borderRadius: "50%", margin: "0 auto 8px",
-                      background: `radial-gradient(circle at 30% 30%, ${sc.colorLight}, ${sc.color})`,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      position: "relative", color: "white",
-                      boxShadow: `0 5px 16px ${sc.color}55`,
-                      transform: `rotate(${tilt}deg)`,
-                    }}>
-                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 1, padding: 4 }}>
-                        <Icon size={16} strokeWidth={2} aria-hidden="true" />
-                        <span style={{ fontSize: 6.5, fontWeight: 800, lineHeight: 1.2, maxWidth: 52, textTransform: "uppercase", letterSpacing: 0.3 }}>
-                          {station.stampLabel}
+            {/* Stamps — grouped in their own panel to the right, each
+                stamp keeping its own card so the tap target and boundary
+                stay clear */}
+            <div style={{
+              display: "flex", flexWrap: "wrap", gap: 10,
+              flex: "2 1 260px",
+            }}>
+              {STATIONS.map((station, i) => {
+                const Icon = STATION_ICONS[i];
+                const sc = STATION_COLORS[i];
+                const stamped = completed.includes(station.id);
+                const isNew = newlyStamped === station.id;
+                const tilt = [-5, 4, -3][i];
+                return (
+                  <Link key={station.id} href={`/stations?station=${station.id}`} className="stamp-tap" style={{
+                    display: "block", textDecoration: "none", flex: "1 1 90px",
+                    background: "white", border: "1px solid #ECECEC", borderRadius: 16,
+                    padding: "14px 6px 10px", textAlign: "center",
+                    boxShadow: stamped ? "0 2px 12px rgba(0,0,0,0.07)" : "0 1px 4px rgba(0,0,0,0.03)",
+                  }}>
+                    {stamped ? (
+                      <div className={isNew ? "stamp-animate" : ""} style={{
+                        width: 66, height: 66, borderRadius: "50%", margin: "0 auto 8px",
+                        background: `radial-gradient(circle at 30% 30%, ${sc.colorLight}, ${sc.color})`,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        position: "relative", color: "white",
+                        boxShadow: `0 5px 16px ${sc.color}55`,
+                        transform: `rotate(${tilt}deg)`,
+                      }}>
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 1, padding: 4 }}>
+                          <Icon size={16} strokeWidth={2} aria-hidden="true" />
+                          <span style={{ fontSize: 6.5, fontWeight: 800, lineHeight: 1.2, maxWidth: 52, textTransform: "uppercase", letterSpacing: 0.3 }}>
+                            {station.stampLabel}
+                          </span>
+                        </div>
+                        <svg style={{ position: "absolute", inset: 3, width: "calc(100% - 6px)", height: "calc(100% - 6px)", pointerEvents: "none" }} viewBox="0 0 100 100" aria-hidden="true">
+                          <circle cx="50" cy="50" r="47" fill="none" stroke="rgba(255,255,255,0.45)" strokeWidth="2" strokeDasharray="5 3" />
+                        </svg>
+                      </div>
+                    ) : (
+                      <div style={{
+                        width: 66, height: 66, borderRadius: "50%", margin: "0 auto 8px",
+                        border: "2px dashed #D8D8D8", background: "#FAFAFA",
+                        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 2,
+                      }}>
+                        <span style={{ fontSize: 18, fontWeight: 700, color: "#C9C9C9", fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", lineHeight: 1 }}>
+                          {station.id}
                         </span>
                       </div>
-                      <svg style={{ position: "absolute", inset: 3, width: "calc(100% - 6px)", height: "calc(100% - 6px)", pointerEvents: "none" }} viewBox="0 0 100 100" aria-hidden="true">
-                        <circle cx="50" cy="50" r="47" fill="none" stroke="rgba(255,255,255,0.45)" strokeWidth="2" strokeDasharray="5 3" />
-                      </svg>
-                    </div>
-                  ) : (
-                    <div style={{
-                      width: 66, height: 66, borderRadius: "50%", margin: "0 auto 8px",
-                      border: "2px dashed #D8D8D8", background: "#FAFAFA",
-                      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 2,
-                    }}>
-                      <span style={{ fontSize: 18, fontWeight: 700, color: "#C9C9C9", fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", lineHeight: 1 }}>
-                        {station.id}
-                      </span>
-                    </div>
-                  )}
-                  <p style={{ fontSize: 10, fontWeight: 700, color: "var(--fhsu-black)", lineHeight: 1.2 }}>
-                    {station.stampLabel}
-                  </p>
-                  <p style={{ marginTop: 4 }}>
-                    {stamped
-                      ? <CheckCircle2 size={13} color={sc.color} strokeWidth={2.5} aria-label="Collected" style={{ display: "inline" }} />
-                      : <Circle size={13} color="#D8D8D8" strokeWidth={1.5} aria-label="Not collected" style={{ display: "inline" }} />}
-                  </p>
-                </Link>
-              );
-            })}
+                    )}
+                    <p style={{ fontSize: 10, fontWeight: 700, color: "var(--fhsu-black)", lineHeight: 1.2 }}>
+                      {station.stampLabel}
+                    </p>
+                    <p style={{ marginTop: 4 }}>
+                      {stamped
+                        ? <CheckCircle2 size={13} color={sc.color} strokeWidth={2.5} aria-label="Collected" style={{ display: "inline" }} />
+                        : <Circle size={13} color="#D8D8D8" strokeWidth={1.5} aria-label="Not collected" style={{ display: "inline" }} />}
+                    </p>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
 
           {/* ── Share (inline, same page) ── */}
