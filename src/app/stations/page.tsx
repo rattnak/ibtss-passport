@@ -96,7 +96,7 @@ function StationsPageContent() {
       <div className="page-container">
 
         {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: 20 }}>
+        <div style={{ textAlign: "center", marginBottom: 40 }}>
           <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(247,168,0,0.16)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px" }}>
             <Stamp size={26} color="var(--gold-text)" strokeWidth={1.8} aria-hidden="true" />
           </div>
@@ -112,7 +112,9 @@ function StationsPageContent() {
           </p>
         </div>
 
-        {/* Scan button */}
+        {/* Scan button — pushed further down from the header so it sits
+            closer to the thumb-reachable zone when holding the phone
+            one-handed, instead of right at the top of the screen. */}
         <button
           onClick={() => (email ? setScanning(true) : openSignIn())}
           style={{
