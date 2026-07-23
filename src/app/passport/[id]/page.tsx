@@ -177,9 +177,9 @@ function PassportPageContent() {
       <div style={{ width: "100%", maxWidth: 672, display: "flex", flexDirection: "column", flex: 1 }}>
 
         {/* ── ID page hero ── */}
-        <div className="passport-cover-bg" style={{ padding: "20px 0 18px", marginTop: 16, borderRadius: 22 }}>
+        <div className="passport-cover-bg" style={{ marginTop: 16, borderRadius: 22, overflow: "hidden" }}>
           <div style={{
-            border: "1.5px solid rgba(247,168,0,0.5)", borderRadius: 22,
+            borderRadius: 22,
             padding: "18px 16px 12px", position: "relative", overflow: "hidden",
             background: "linear-gradient(160deg, rgba(255,255,255,0.04) 0%, transparent 100%)",
           }}>
@@ -215,7 +215,10 @@ function PassportPageContent() {
                   </div>
                   <div>
                     <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 8.5, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 2 }}>Issued by</p>
-                    <a href="https://fhsu.edu/" target="_blank" rel="noopener noreferrer" style={{ color: "white", fontSize: 11.5, fontWeight: 600, textDecoration: "underline" }}>Fort Hays State University</a>
+                    <a href="https://fhsu.edu/" target="_blank" rel="noopener noreferrer" style={{ color: "white", fontSize: 11.5, fontWeight: 600, textDecoration: "underline" }}>
+                      <span className="full-name">Fort Hays State University</span>
+                      <span className="short-name">FHSU</span>
+                    </a>
                   </div>
                   <div>
                     <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 8.5, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 2 }}>Status</p>
@@ -254,39 +257,35 @@ function PassportPageContent() {
           <h2 style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase", color: "#999", marginBottom: 12 }}>
             Station Stamps
           </h2>
-          <div style={{
-            display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: 12,
-            background: "white", border: "1px solid #ECECEC", borderRadius: 16,
-            padding: "16px", marginBottom: 18, boxShadow: "0 1px 8px rgba(0,0,0,0.04)",
-          }}>
+          <div className="stamp-grid" style={{ marginBottom: 18 }}>
             {/* Ring + instruction */}
             <div style={{
               display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center",
-              flex: "1 1 150px", justifyContent: "center",
+              justifyContent: "center",
+              background: "white", border: "1px solid #ECECEC", borderRadius: 16,
+              padding: "16px 8px", boxShadow: "0 1px 8px rgba(0,0,0,0.04)",
             }}>
-              <div style={{ position: "relative", width: 92, height: 92, flexShrink: 0 }}
+              <div style={{ position: "relative", width: 78, height: 78, flexShrink: 0 }}
                 role="img" aria-label={`${completed.length} of 3 stations completed`}>
-                <svg viewBox="0 0 92 92" style={{ width: 92, height: 92, transform: "rotate(-90deg)" }}>
-                  <circle cx="46" cy="46" r="38" fill="none" stroke="#EFEFEF" strokeWidth="8" />
-                  <circle cx="46" cy="46" r="38" fill="none" stroke="var(--fhsu-gold)" strokeWidth="8"
+                <svg viewBox="0 0 78 78" style={{ width: 78, height: 78, transform: "rotate(-90deg)" }}>
+                  <circle cx="39" cy="39" r="32" fill="none" stroke="#EFEFEF" strokeWidth="7" />
+                  <circle cx="39" cy="39" r="32" fill="none" stroke="var(--fhsu-gold)" strokeWidth="7"
                     strokeLinecap="round"
-                    strokeDasharray={2 * Math.PI * 38}
-                    strokeDashoffset={2 * Math.PI * 38 * (1 - completed.length / 3)}
+                    strokeDasharray={2 * Math.PI * 32}
+                    strokeDashoffset={2 * Math.PI * 32 * (1 - completed.length / 3)}
                     style={{ transition: "stroke-dashoffset 0.7s cubic-bezier(0.22,1,0.36,1)" }} />
                 </svg>
                 <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-                  <span style={{ fontSize: 22, fontWeight: 800, color: "var(--fhsu-black)", lineHeight: 1 }}>{completed.length}<span style={{ fontSize: 12, color: "#999", fontWeight: 600 }}>/3</span></span>
-                  <span style={{ fontSize: 8.5, letterSpacing: 1, textTransform: "uppercase", color: "#999", marginTop: 3 }}>Stamps</span>
+                  <span style={{ fontSize: 18, fontWeight: 800, color: "var(--fhsu-black)", lineHeight: 1 }}>{completed.length}<span style={{ fontSize: 11, color: "#999", fontWeight: 600 }}>/3</span></span>
+                  <span style={{ fontSize: 7.5, letterSpacing: 1, textTransform: "uppercase", color: "#999", marginTop: 2 }}>Stamps</span>
                 </div>
               </div>
-              <p style={{ fontSize: 13.5, fontWeight: 700, color: "var(--fhsu-black)", marginTop: 10, lineHeight: 1.3 }}>
-                {progress.is_complete
-                  ? "All three lenses collected!"
-                  : `${3 - completed.length} station${3 - completed.length !== 1 ? "s" : ""} to go`}
+              <p style={{ fontSize: 11.5, fontWeight: 700, color: "var(--fhsu-black)", marginTop: 8, lineHeight: 1.25 }}>
+                {progress.is_complete ? "All done!" : `${3 - completed.length} to go`}
               </p>
               {!progress.is_complete && (
-                <Link href="/stations" style={{ display: "inline-flex", alignItems: "center", gap: 4, marginTop: 4, fontSize: 11.5, fontWeight: 700, color: "var(--gold-text)", textDecoration: "none" }}>
-                  Go to stations <ArrowRight size={11} strokeWidth={2.5} aria-hidden="true" />
+                <Link href="/stations" style={{ display: "inline-flex", alignItems: "center", gap: 3, marginTop: 3, fontSize: 10.5, fontWeight: 700, color: "var(--gold-text)", textDecoration: "none" }}>
+                  Go to stations <ArrowRight size={10} strokeWidth={2.5} aria-hidden="true" />
                 </Link>
               )}
             </div>
@@ -300,7 +299,7 @@ function PassportPageContent() {
               const tilt = [-5, 4, -3][i];
               return (
                 <Link key={station.id} href={`/stations?station=${station.id}`} className="stamp-tap" style={{
-                  display: "block", textDecoration: "none", flex: "1 1 120px",
+                  display: "block", textDecoration: "none",
                   background: "white", border: "1px solid #ECECEC", borderRadius: 16,
                   padding: "16px 8px 12px", textAlign: "center",
                   boxShadow: stamped ? "0 2px 12px rgba(0,0,0,0.07)" : "0 1px 4px rgba(0,0,0,0.03)",

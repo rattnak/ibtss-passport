@@ -62,6 +62,19 @@
   .short-name { display: inline; }
 }
 
+/* Progress ring + station stamps: a predictable grid instead of flex-wrap
+   (which broke into uneven rows depending on available width). 2 columns
+   on phones so every cell stays a comfortable, consistent tap target;
+   4 across once there's room for the ring and all 3 stamps in one row. */
+.stamp-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+@media (min-width: 480px) {
+  .stamp-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
 .topbar-name {
   max-width: 90px;
   overflow: hidden;
