@@ -31,6 +31,7 @@ function MyPassportContent() {
 
   const [mode, setMode] = useState<"signin" | "register">("signin");
   const [pendingEmail, setPendingEmail] = useState<string | null>(null);
+  const [deviceConfirmEmail, setDeviceConfirmEmail] = useState<string | null>(null);
 
   // Sign in
   const [signInEmail, setSignInEmail] = useState("");
@@ -80,6 +81,10 @@ function MyPassportContent() {
     setResendSent(false);
     const result = await signIn(signInEmail);
     setSignInLoading(false);
+    if (result.deviceConfirmationSent) {
+      setDeviceConfirmEmail(signInEmail.toLowerCase().trim());
+      return;
+    }
     if (!result.ok) {
       setSignInError(result.error ?? "Something went wrong.");
       setSignInUnverified(!!result.unverified);
@@ -138,6 +143,37 @@ function MyPassportContent() {
     return (
       <main className="min-h-full flex items-center justify-center px-4" style={{ background: "white" }}>
         <p role="status" style={{ fontSize: 14, color: "#666" }}>Opening your passport…</p>
+      </main>
+    );
+  }
+
+  if (deviceConfirmEmail) {
+    return (
+      <main className="min-h-full flex flex-col items-center justify-center px-4 py-10" style={{ background: "white" }}>
+        <div className="w-full" style={{ maxWidth: 420 }}>
+          <div style={{
+            background: "white", borderRadius: 18, padding: "28px 22px", textAlign: "center",
+            border: "1px solid #E8E8E8", boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
+          }}>
+            <MailCheck size={32} color="var(--gold-text)" strokeWidth={1.8} aria-hidden="true" style={{ margin: "0 auto 14px" }} />
+            <h1 style={{ fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 22, color: "var(--fhsu-black)", fontWeight: 700, marginBottom: 8 }}>
+              Confirm this device
+            </h1>
+            <p style={{ fontSize: 13.5, color: "#666", lineHeight: 1.6, marginBottom: 4 }}>
+              We sent a confirmation link to <strong>{deviceConfirmEmail}</strong>. Click it to sign in on this device — the link expires in 15 minutes.
+            </p>
+            <p style={{ fontSize: 12, color: "#999", marginTop: 14 }}>
+              Wrong email?{" "}
+              <button
+                type="button"
+                onClick={() => setDeviceConfirmEmail(null)}
+                style={{ color: "var(--fhsu-black)", fontWeight: 700, background: "none", border: "none", padding: 0, cursor: "pointer", textDecoration: "underline", fontSize: 12, fontFamily: "inherit" }}
+              >
+                Try again
+              </button>
+            </p>
+          </div>
+        </div>
       </main>
     );
   }

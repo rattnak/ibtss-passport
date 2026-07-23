@@ -10,6 +10,7 @@ import {
 import { getToolkitSection, ToolkitBlock, ToolkitField } from "@/lib/toolkit";
 import { isWorkshopOver } from "@/lib/agenda";
 import { useSession } from "@/lib/session";
+import { Footer } from "@/components/Footer";
 
 type Responses = Record<string, string | string[]>;
 
@@ -334,6 +335,8 @@ export default function ToolkitSectionPage() {
             return null;
           })}
         </div>
+
+        <Footer />
       </main>
     );
   }
@@ -384,7 +387,33 @@ export default function ToolkitSectionPage() {
 
         {/* Body */}
         <div style={{ flex: 1, paddingBottom: 24 }}>
-          {needsSignIn ? (
+          {needsSignIn && isWorkshopOver() ? (
+            <div style={{ background: "#FAFAFA", borderRadius: 16, padding: "28px 22px", border: "1px solid #E5E5E5", textAlign: "center" }}>
+              <div style={{ width: 56, height: 56, borderRadius: "50%", background: "#F2F2F2", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px" }}>
+                <BookOpen size={24} color="#999" strokeWidth={1.8} aria-hidden="true" />
+              </div>
+              <h2 style={{ fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 19, color: "var(--fhsu-black)", fontWeight: 700, marginBottom: 6 }}>
+                This workshop has concluded
+              </h2>
+              <p style={{ fontSize: 13.5, color: "#666", marginBottom: 20, lineHeight: 1.6 }}>
+                Worksheets are only open to signed-in participants who attended. If you were there, sign in to pick up where you left off.
+              </p>
+              <button
+                onClick={openSignIn}
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 8,
+                  background: "var(--fhsu-gold)", color: "var(--fhsu-black)",
+                  border: "none", borderRadius: 12, padding: "13px 26px", minHeight: 48,
+                  fontSize: 14.5, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
+                }}
+              >
+                <LogIn size={15} aria-hidden="true" /> Sign In
+              </button>
+              <p style={{ fontSize: 12.5, color: "#888", marginTop: 16 }}>
+                <Link href="/toolkit" style={{ color: "var(--gold-text)", fontWeight: 700 }}>← Back to Toolkit</Link>
+              </p>
+            </div>
+          ) : needsSignIn ? (
             <div style={{ background: "#FAFAFA", borderRadius: 16, padding: "28px 22px", border: "1px solid #E5E5E5", textAlign: "center" }}>
               <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(247,168,0,0.16)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px" }}>
                 <PenLine size={24} color="var(--gold-text)" strokeWidth={1.8} aria-hidden="true" />
@@ -421,6 +450,8 @@ export default function ToolkitSectionPage() {
           )}
         </div>
       </div>
+
+      <Footer />
     </main>
   );
 }

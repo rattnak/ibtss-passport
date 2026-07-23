@@ -53,6 +53,15 @@
 .topbar-sub { display: none; }
 @media (min-width: 400px) { .topbar-sub { display: inline; } }
 
+/* Swap full institution/org names for an abbreviation on narrow screens,
+   so a long name never forces a box taller or wider than it needs to be. */
+.full-name { display: inline; }
+.short-name { display: none; }
+@media (max-width: 480px) {
+  .full-name { display: none; }
+  .short-name { display: inline; }
+}
+
 .topbar-name {
   max-width: 90px;
   overflow: hidden;
@@ -125,6 +134,17 @@ html, body {
 }
 .slide-up {
   animation: slideUp 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Offside drawer slide-in (Appendix panel) */
+.drawer-panel {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.drawer-backdrop {
+  transition: opacity 0.3s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .drawer-panel, .drawer-backdrop { transition: none; }
 }
 
 /* Validation shake (form error feedback) */

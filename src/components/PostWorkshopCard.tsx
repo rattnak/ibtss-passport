@@ -27,7 +27,7 @@ export default function PostWorkshopCard() {
         style={{
           display: "flex", alignItems: "center", gap: 12,
           background: "#FAFAFA", border: "1px dashed #D8D8D8", borderRadius: 14,
-          padding: "14px 16px", marginTop: 24,
+          padding: "14px 16px",
         }}
       >
         <Lock size={18} color="#999" strokeWidth={2} aria-hidden="true" style={{ flexShrink: 0 }} />
@@ -47,7 +47,7 @@ export default function PostWorkshopCard() {
       style={{
         display: "flex", alignItems: "center", gap: 12,
         background: "var(--fhsu-black)", border: "1.5px solid var(--fhsu-gold)",
-        borderRadius: 14, padding: "15px 16px", marginTop: 24, textDecoration: "none",
+        borderRadius: 14, padding: "15px 16px", textDecoration: "none",
       }}
     >
       <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(247,168,0,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>

@@ -7,6 +7,7 @@ import {
   Stamp, ArrowRight, FileText,
 } from "lucide-react";
 import { AGENDA, WORKSHOP_INFO, AgendaSession } from "@/lib/agenda";
+import { Footer } from "@/components/Footer";
 
 function SessionCard({ session }: { session: AgendaSession }) {
   const [open, setOpen] = useState(false);
@@ -150,7 +151,9 @@ export default function HomePage() {
               <Clock size={13} color="var(--gold)" strokeWidth={2} /> {WORKSHOP_INFO.date} · {WORKSHOP_INFO.time}
             </span>
             <a href="#location-map" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "rgba(255,255,255,0.7)", textDecoration: "underline" }}>
-              <MapPin size={13} color="var(--gold)" strokeWidth={2} /> American University of Phnom Penh
+              <MapPin size={13} color="var(--gold)" strokeWidth={2} />
+              <span className="full-name">American University of Phnom Penh</span>
+              <span className="short-name">AUPP</span>
             </a>
           </div>
         </div>
@@ -226,9 +229,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <p style={{ fontSize: 11, color: "#AAA", textAlign: "center" }}>
-        Developed by <a href="https://rattnak.com" target="_blank" rel="noopener noreferrer" style={{ color: "#AAA", textDecoration: "underline" }}>Chanrattnak Mong</a>
-      </p>
+      <Footer />
     </main>
   );
 }

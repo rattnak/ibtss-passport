@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { STATIONS } from "@/lib/stations";
 import CredlyBadgeCard from "@/components/CredlyBadgeCard";
+import { Footer } from "@/components/Footer";
 import { useSession } from "@/lib/session";
 
 type Progress = {
@@ -41,7 +42,7 @@ function PassportPageContent() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { participantId, signIn, signOut } = useSession();
+  const { participantId, completeDeviceSignIn, signOut } = useSession();
   const [progress, setProgress] = useState<Progress | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -49,7 +50,9 @@ function PassportPageContent() {
   const [copied, setCopied] = useState(false);
   const [captionCopied, setCaptionCopied] = useState(false);
   const [newlyStamped] = useState<number | null>(null);
-  const [passportUrl, setPassportUrl] = useState("");
+  // The shareable link points at the public /badge/[id] page (a simplified,
+  // owner-UI-free view), not this page's own URL.
+  const [badgeUrl, setBadgeUrl] = useState("");
   const wasOwner = useRef(false);
   const signedInFromVerify = useRef(false);
 
@@ -58,8 +61,8 @@ function PassportPageContent() {
   // that render differ from the server-rendered HTML and triggers a
   // hydration mismatch. Setting it in an effect runs only after hydration.
   useEffect(() => {
-    setPassportUrl(window.location.href);
-  }, []);
+    setBadgeUrl(`${window.location.origin}/badge/${id}`);
+  }, [id]);
 
   useEffect(() => {
     fetch(`/api/passport/${id}`)
@@ -78,15 +81,29 @@ function PassportPageContent() {
   // The email-verification link redirects here straight from the server
   // (no client-side sign-in happens along the way), so without this the
   // navbar and every other page keep treating you as signed out even
-  // though this page itself shows your data by URL id.
+  // though this page itself shows your data by URL id. The server already
+  // proved ownership via the signed token, so this completes sign-in
+  // directly (and trusts the device) rather than going through signIn()'s
+  // new-device email-confirmation gate, which would otherwise loop.
   useEffect(() => {
-    if (signedInFromVerify.current || searchParams.get("justVerified") !== "1" || !progress?.email) return;
+    if (signedInFromVerify.current || searchParams.get("justVerified") !== "1" || !progress) return;
     signedInFromVerify.current = true;
-    signIn(progress.email);
+    completeDeviceSignIn(progress.id);
     const url = new URL(window.location.href);
     url.searchParams.delete("justVerified");
     window.history.replaceState({}, "", url);
-  }, [searchParams, progress, signIn]);
+  }, [searchParams, progress, completeDeviceSignIn]);
+
+  // Same idea for the new-device confirmation link (/verify-device) — the
+  // server already verified the signed token, so trust this device directly.
+  useEffect(() => {
+    if (signedInFromVerify.current || searchParams.get("deviceVerified") !== "1" || !progress) return;
+    signedInFromVerify.current = true;
+    completeDeviceSignIn(progress.id);
+    const url = new URL(window.location.href);
+    url.searchParams.delete("deviceVerified");
+    window.history.replaceState({}, "", url);
+  }, [searchParams, progress, completeDeviceSignIn]);
 
   // If you sign out while viewing your own passport, leave the page —
   // the page itself stays public (LinkedIn share links point here), but
@@ -136,11 +153,11 @@ function PassportPageContent() {
     // params are ignored) — it only takes the URL and pulls its preview card from
     // that page's Open Graph tags. The caption below is meant to be copied into
     // the post LinkedIn opens, not auto-inserted.
-    return `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(passportUrl)}`;
+    return `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(badgeUrl)}`;
   }
 
   function fullCaption() {
-    return reflection.trim() ? `${reflection.trim()}\n\n${BASE_POST}` : BASE_POST;
+    return reflection.trim() ? `${BASE_POST}\n\n${reflection.trim()}` : BASE_POST;
   }
 
   async function copyCaption() {
@@ -150,7 +167,7 @@ function PassportPageContent() {
   }
 
   async function copyLink() {
-    await navigator.clipboard.writeText(passportUrl);
+    await navigator.clipboard.writeText(badgeUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
@@ -230,51 +247,51 @@ function PassportPageContent() {
         {/* ── Body ── */}
         <div style={{ padding: "20px 16px 32px" }}>
 
-          {/* Progress ring + stats */}
+          {/* Progress ring (with its instruction stacked beneath it) and
+              the 3 station stamps share one outer bordered container, laid
+              out in a row — each stamp keeps its own inner border/shadow
+              for a clear interactive boundary and full-size tap target. */}
+          <h2 style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: "#999", marginBottom: 12 }}>
+            Station Stamps
+          </h2>
           <div style={{
-            display: "flex", alignItems: "center", gap: 18,
+            display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: 12,
             background: "white", border: "1px solid #ECECEC", borderRadius: 16,
-            padding: "16px 18px", marginBottom: 18, boxShadow: "0 1px 8px rgba(0,0,0,0.04)",
+            padding: "16px", marginBottom: 18, boxShadow: "0 1px 8px rgba(0,0,0,0.04)",
           }}>
-            <div style={{ position: "relative", width: 84, height: 84, flexShrink: 0 }}
-              role="img" aria-label={`${completed.length} of 3 stations completed`}>
-              <svg viewBox="0 0 84 84" style={{ width: 84, height: 84, transform: "rotate(-90deg)" }}>
-                <circle cx="42" cy="42" r="34" fill="none" stroke="#EFEFEF" strokeWidth="8" />
-                <circle cx="42" cy="42" r="34" fill="none" stroke="var(--fhsu-gold)" strokeWidth="8"
-                  strokeLinecap="round"
-                  strokeDasharray={2 * Math.PI * 34}
-                  strokeDashoffset={2 * Math.PI * 34 * (1 - completed.length / 3)}
-                  style={{ transition: "stroke-dashoffset 0.7s cubic-bezier(0.22,1,0.36,1)" }} />
-              </svg>
-              <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-                <span style={{ fontSize: 21, fontWeight: 800, color: "var(--fhsu-black)", lineHeight: 1 }}>{completed.length}<span style={{ fontSize: 12, color: "#999", fontWeight: 600 }}>/3</span></span>
-                <span style={{ fontSize: 8.5, letterSpacing: 1, textTransform: "uppercase", color: "#999", marginTop: 3 }}>Stamps</span>
+            {/* Ring + instruction */}
+            <div style={{
+              display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center",
+              flex: "1 1 160px", justifyContent: "center",
+            }}>
+              <div style={{ position: "relative", width: 84, height: 84, flexShrink: 0 }}
+                role="img" aria-label={`${completed.length} of 3 stations completed`}>
+                <svg viewBox="0 0 84 84" style={{ width: 84, height: 84, transform: "rotate(-90deg)" }}>
+                  <circle cx="42" cy="42" r="34" fill="none" stroke="#EFEFEF" strokeWidth="8" />
+                  <circle cx="42" cy="42" r="34" fill="none" stroke="var(--fhsu-gold)" strokeWidth="8"
+                    strokeLinecap="round"
+                    strokeDasharray={2 * Math.PI * 34}
+                    strokeDashoffset={2 * Math.PI * 34 * (1 - completed.length / 3)}
+                    style={{ transition: "stroke-dashoffset 0.7s cubic-bezier(0.22,1,0.36,1)" }} />
+                </svg>
+                <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                  <span style={{ fontSize: 21, fontWeight: 800, color: "var(--fhsu-black)", lineHeight: 1 }}>{completed.length}<span style={{ fontSize: 12, color: "#999", fontWeight: 600 }}>/3</span></span>
+                  <span style={{ fontSize: 8.5, letterSpacing: 1, textTransform: "uppercase", color: "#999", marginTop: 3 }}>Stamps</span>
+                </div>
               </div>
-            </div>
-            <div style={{ flex: 1 }}>
-              <p style={{ fontSize: 15, fontWeight: 700, color: "var(--fhsu-black)", marginBottom: 4 }}>
+              <p style={{ fontSize: 13.5, fontWeight: 700, color: "var(--fhsu-black)", marginTop: 10, lineHeight: 1.3 }}>
                 {progress.is_complete
                   ? "All three lenses collected!"
                   : `${3 - completed.length} station${3 - completed.length !== 1 ? "s" : ""} to go`}
               </p>
-              <p style={{ fontSize: 12.5, color: "#767676", lineHeight: 1.55 }}>
-                {progress.is_complete
-                  ? "Check the Toolkit tab for everything you used today."
-                  : "Scan the QR code at each station to collect its stamp."}
-              </p>
               {!progress.is_complete && (
-                <Link href="/stations" style={{ display: "inline-flex", alignItems: "center", gap: 5, marginTop: 8, fontSize: 12.5, fontWeight: 700, color: "var(--gold-text)", textDecoration: "none" }}>
-                  Go to stations <ArrowRight size={13} strokeWidth={2.5} aria-hidden="true" />
+                <Link href="/stations" style={{ display: "inline-flex", alignItems: "center", gap: 4, marginTop: 4, fontSize: 11.5, fontWeight: 700, color: "var(--gold-text)", textDecoration: "none" }}>
+                  Go to stations <ArrowRight size={11} strokeWidth={2.5} aria-hidden="true" />
                 </Link>
               )}
             </div>
-          </div>
 
-          {/* Stamp grid */}
-          <h2 style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: "#999", marginBottom: 12 }}>
-            Station Stamps
-          </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
+            {/* Stamps */}
             {STATIONS.map((station, i) => {
               const Icon = STATION_ICONS[i];
               const sc = STATION_COLORS[i];
@@ -283,14 +300,14 @@ function PassportPageContent() {
               const tilt = [-5, 4, -3][i];
               return (
                 <Link key={station.id} href={`/stations?station=${station.id}`} className="stamp-tap" style={{
-                  display: "block", textDecoration: "none",
+                  display: "block", textDecoration: "none", flex: "1 1 90px",
                   background: "white", border: "1px solid #ECECEC", borderRadius: 16,
-                  padding: "16px 8px 12px", textAlign: "center",
+                  padding: "14px 6px 10px", textAlign: "center",
                   boxShadow: stamped ? "0 2px 12px rgba(0,0,0,0.07)" : "0 1px 4px rgba(0,0,0,0.03)",
                 }}>
                   {stamped ? (
                     <div className={isNew ? "stamp-animate" : ""} style={{
-                      width: 78, height: 78, borderRadius: "50%", margin: "0 auto 10px",
+                      width: 66, height: 66, borderRadius: "50%", margin: "0 auto 8px",
                       background: `radial-gradient(circle at 30% 30%, ${sc.colorLight}, ${sc.color})`,
                       display: "flex", alignItems: "center", justifyContent: "center",
                       position: "relative", color: "white",
@@ -298,11 +315,10 @@ function PassportPageContent() {
                       transform: `rotate(${tilt}deg)`,
                     }}>
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 1, padding: 4 }}>
-                        <Icon size={18} strokeWidth={2} aria-hidden="true" />
-                        <span style={{ fontSize: 7.5, fontWeight: 800, lineHeight: 1.2, maxWidth: 60, textTransform: "uppercase", letterSpacing: 0.4 }}>
+                        <Icon size={16} strokeWidth={2} aria-hidden="true" />
+                        <span style={{ fontSize: 6.5, fontWeight: 800, lineHeight: 1.2, maxWidth: 52, textTransform: "uppercase", letterSpacing: 0.3 }}>
                           {station.stampLabel}
                         </span>
-                        <span style={{ fontSize: 6.5, opacity: 0.85, letterSpacing: 0.8 }}>IBTSS 2026</span>
                       </div>
                       <svg style={{ position: "absolute", inset: 3, width: "calc(100% - 6px)", height: "calc(100% - 6px)", pointerEvents: "none" }} viewBox="0 0 100 100" aria-hidden="true">
                         <circle cx="50" cy="50" r="47" fill="none" stroke="rgba(255,255,255,0.45)" strokeWidth="2" strokeDasharray="5 3" />
@@ -310,24 +326,22 @@ function PassportPageContent() {
                     </div>
                   ) : (
                     <div style={{
-                      width: 78, height: 78, borderRadius: "50%", margin: "0 auto 10px",
+                      width: 66, height: 66, borderRadius: "50%", margin: "0 auto 8px",
                       border: "2px dashed #D8D8D8", background: "#FAFAFA",
                       display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 2,
                     }}>
-                      <span style={{ fontSize: 20, fontWeight: 700, color: "#C9C9C9", fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", lineHeight: 1 }}>
+                      <span style={{ fontSize: 18, fontWeight: 700, color: "#C9C9C9", fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", lineHeight: 1 }}>
                         {station.id}
                       </span>
-                      <span style={{ fontSize: 7, letterSpacing: 1, textTransform: "uppercase", color: "#C9C9C9" }}>Empty</span>
                     </div>
                   )}
-                  <p style={{ fontSize: 11.5, fontWeight: 700, color: "var(--fhsu-black)", lineHeight: 1.25 }}>
+                  <p style={{ fontSize: 10, fontWeight: 700, color: "var(--fhsu-black)", lineHeight: 1.2 }}>
                     {station.stampLabel}
                   </p>
-                  <p style={{ fontSize: 9.5, color: "#999", marginTop: 2 }}>{station.audience}</p>
-                  <p style={{ marginTop: 6 }}>
+                  <p style={{ marginTop: 4 }}>
                     {stamped
-                      ? <CheckCircle2 size={16} color={sc.color} strokeWidth={2.5} aria-label="Collected" style={{ display: "inline" }} />
-                      : <Circle size={16} color="#D8D8D8" strokeWidth={1.5} aria-label="Not collected" style={{ display: "inline" }} />}
+                      ? <CheckCircle2 size={13} color={sc.color} strokeWidth={2.5} aria-label="Collected" style={{ display: "inline" }} />
+                      : <Circle size={13} color="#D8D8D8" strokeWidth={1.5} aria-label="Not collected" style={{ display: "inline" }} />}
                   </p>
                 </Link>
               );
@@ -495,6 +509,8 @@ function PassportPageContent() {
           )}
         </div>
       </div>
+
+      <Footer />
     </main>
   );
 }

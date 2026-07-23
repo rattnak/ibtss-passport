@@ -36,8 +36,9 @@ export default function CredlyBadgeCard({ isComplete }: { isComplete: boolean })
         </div>
       </div>
       <p style={{ fontSize: 12.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.6, marginBottom: 14 }}>
-        Your digital badge is ready to claim on Credly. The guide below walks you through
-        creating your account, accepting your badge, and adding it to LinkedIn.
+        Your digital badge is issued after the workshop team processes completions —
+        you&apos;ll get a separate email from Credly when it&apos;s ready. The guide below walks
+        you through creating your account, accepting your badge, and adding it to LinkedIn.
       </p>
       <a
         href="/Credly%20Badges%20at%20FHSU%20-%20Earner%20Experience.pdf"

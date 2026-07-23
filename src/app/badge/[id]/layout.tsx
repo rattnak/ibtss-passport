@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { supabaseAdmin } from "@/lib/supabase";
+import { BADGE_TITLE, BADGE_DESCRIPTION } from "@/components/WorkshopCredentialSummary";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
-
-const CAPTION = "AI in Higher Education: From Challenge to Opportunity (Fort Hays State University x American University of Phnom Penh). #IBTSS2026 #AIinEducation #FHSU";
 
 export async function generateMetadata(
   { params }: { params: Promise<{ id: string }> }
@@ -17,14 +16,12 @@ export async function generateMetadata(
     .single();
 
   const title = data?.is_complete
-    ? `${data.name} completed the IBTSS 2026 AI Learning Passport!`
-    : "IBTSS 2026 AI Learning Passport";
+    ? `${data.name} earned the ${BADGE_TITLE} badge`
+    : BADGE_TITLE;
 
-  const description = data?.is_complete
-    ? `I completed all three AI tool stations at the IBTSS 2026 Pre-Conference Workshop — ${CAPTION}`
-    : CAPTION;
+  const description = BADGE_DESCRIPTION;
 
-  const url = `${BASE_URL}/passport/${id}`;
+  const url = `${BASE_URL}/badge/${id}`;
 
   return {
     title,
@@ -46,6 +43,6 @@ export async function generateMetadata(
   };
 }
 
-export default function PassportLayout({ children }: { children: React.ReactNode }) {
+export default function BadgeLayout({ children }: { children: React.ReactNode }) {
   return children;
 }

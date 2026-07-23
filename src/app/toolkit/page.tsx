@@ -1,11 +1,62 @@
+"use client";
+
 import Link from "next/link";
-import { PenLine, BookOpen, ArrowRight } from "lucide-react";
-import { TOOLKIT_SECTIONS } from "@/lib/toolkit";
+import { PenLine, BookOpen, ArrowRight, FileText, ExternalLink, Lock } from "lucide-react";
+import { TOOLKIT_SECTIONS, WORKSHEET_PDF_KEY, PARTICIPANT_TOOLKIT_PDF_KEY } from "@/lib/toolkit";
 import PostWorkshopCard from "@/components/PostWorkshopCard";
+import { Footer } from "@/components/Footer";
+import { useSession } from "@/lib/session";
+
+function PdfLink({ pdfKey, label }: { pdfKey: string; label: string }) {
+  const { email, openSignIn } = useSession();
+
+  if (!email) {
+    return (
+      <button
+        onClick={openSignIn}
+        style={{
+          display: "flex", alignItems: "center", gap: 10, width: "100%",
+          background: "#FAFAFA", border: "1px solid #ECECEC",
+          borderRadius: 10, padding: "10px 12px", marginBottom: 14,
+          cursor: "pointer", fontFamily: "inherit", textAlign: "left",
+        }}
+      >
+        <div style={{
+          width: 28, height: 28, borderRadius: 8, flexShrink: 0,
+          background: "#EFEFEF", display: "flex", alignItems: "center", justifyContent: "center",
+        }}>
+          <Lock size={13} color="#888" strokeWidth={2} aria-hidden="true" />
+        </div>
+        <p style={{ flex: 1, fontSize: 13, fontWeight: 600, color: "#767676" }}>Sign in to open {label}</p>
+      </button>
+    );
+  }
+
+  return (
+    <a
+      href={`/api/toolkit/pdf?which=${pdfKey}&email=${encodeURIComponent(email)}`}
+      target="_blank" rel="noopener noreferrer"
+      style={{
+        display: "flex", alignItems: "center", gap: 10,
+        background: "#FAFAFA", border: "1px solid #ECECEC",
+        borderRadius: 10, padding: "10px 12px", marginBottom: 14,
+        textDecoration: "none",
+      }}
+    >
+      <div style={{
+        width: 28, height: 28, borderRadius: 8, flexShrink: 0,
+        background: "#EFEFEF", display: "flex", alignItems: "center", justifyContent: "center",
+      }}>
+        <FileText size={14} color="#888" strokeWidth={2} aria-hidden="true" />
+      </div>
+      <p style={{ flex: 1, fontSize: 13, fontWeight: 600, color: "var(--fhsu-black)" }}>{label}</p>
+      <ExternalLink size={14} color="#999" strokeWidth={2} aria-hidden="true" style={{ flexShrink: 0 }} />
+    </a>
+  );
+}
 
 export default function ToolkitIndexPage() {
   const worksheets = TOOLKIT_SECTIONS.filter((s) => s.interactive);
-  // post-workshop lives in its own time-gated card at the bottom
   const references = TOOLKIT_SECTIONS.filter((s) => !s.interactive && s.id !== "post-workshop");
 
   const card = (s: (typeof TOOLKIT_SECTIONS)[number]) => (
@@ -46,20 +97,32 @@ export default function ToolkitIndexPage() {
           Your digital workshop companion. Sign in once and your worksheets save automatically under your passport email; reference sections are yours to keep.
         </p>
 
+        {/* ── Box 1: Worksheets ── */}
         <h2 style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase", color: "var(--gold-text)", marginBottom: 10 }}>
           Fill-In Worksheets
         </h2>
-        <div className="card-grid" style={{ marginBottom: 24 }}>
+        <PdfLink pdfKey={WORKSHEET_PDF_KEY} label="Open full Worksheet PDF" />
+        <div className="card-grid">
           {worksheets.map(card)}
         </div>
 
+        <hr style={{ border: "none", borderTop: "1px solid #ECECEC", margin: "28px 0" }} />
+
+        {/* ── Box 2: Reference Materials ── */}
         <h2 style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase", color: "#767676", marginBottom: 10 }}>
           Reference Materials
         </h2>
-        <div className="card-grid">          {references.map(card)}
+        <PdfLink pdfKey={PARTICIPANT_TOOLKIT_PDF_KEY} label="Open full Participant Toolkit PDF" />
+        <div className="card-grid">
+          {references.map(card)}
         </div>
 
+        <hr style={{ border: "none", borderTop: "1px solid #ECECEC", margin: "28px 0" }} />
+
+        {/* ── Box 3: Post-Workshop Resources (time-gated) ── */}
         <PostWorkshopCard />
+
+        <Footer />
       </div>
     </main>
   );

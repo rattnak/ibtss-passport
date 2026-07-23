@@ -13,7 +13,8 @@ type Session = {
   email: string | null;
   name: string | null;
   participantId: string | null;
-  signIn: (email: string) => Promise<{ ok: boolean; error?: string; unverified?: boolean }>;
+  signIn: (email: string) => Promise<{ ok: boolean; error?: string; unverified?: boolean; deviceConfirmationSent?: boolean }>;
+  completeDeviceSignIn: (participantId: string) => Promise<{ ok: boolean }>;
   signOut: () => void;
   openSignIn: () => void;
 };
@@ -21,6 +22,7 @@ type Session = {
 const SessionContext = createContext<Session>({
   email: null, name: null, participantId: null,
   signIn: async () => ({ ok: false }),
+  completeDeviceSignIn: async () => ({ ok: false }),
   signOut: () => {},
   openSignIn: () => {},
 });
@@ -42,6 +44,23 @@ function clearStoredSession() {
     localStorage.removeItem("ibtss_email");
     localStorage.removeItem("ibtss_name");
     localStorage.removeItem("ibtss_participant_id");
+  } catch {}
+}
+
+// Trusted-device marker: separate from the active session and deliberately
+// NOT cleared by sign-out, so a returning device on the same browser skips
+// re-verification while a genuinely new browser/device still requires it.
+function isTrustedDevice(participantId: string): boolean {
+  try {
+    return localStorage.getItem(`ibtss_trusted_${participantId}`) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function markDeviceTrusted(participantId: string) {
+  try {
+    localStorage.setItem(`ibtss_trusted_${participantId}`, "1");
   } catch {}
 }
 
@@ -89,6 +108,16 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
       .catch(() => {}); // offline/network error — keep the cached session rather than sign out
   }, []);
 
+  const completeSignIn = useCallback((info: { email: string; name: string | null; id: string | null }) => {
+    setState({ email: info.email, name: info.name, participantId: info.id });
+    try {
+      localStorage.setItem("ibtss_email", info.email);
+      if (info.name) localStorage.setItem("ibtss_name", info.name);
+      if (info.id) localStorage.setItem("ibtss_participant_id", info.id);
+    } catch {}
+    if (info.id) markDeviceTrusted(info.id);
+  }, []);
+
   const signIn = useCallback(async (rawEmail: string) => {
     const clean = rawEmail.toLowerCase().trim();
     const res = await fetch(`/api/participant-by-email?email=${encodeURIComponent(clean)}`);
@@ -103,14 +132,34 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
         error: "Please confirm your email first — check your inbox for the link we sent when you registered.",
       };
     }
-    setState({ email: clean, name: data.name ?? null, participantId: data.id ?? null });
-    try {
-      localStorage.setItem("ibtss_email", clean);
-      if (data.name) localStorage.setItem("ibtss_name", data.name);
-      if (data.id) localStorage.setItem("ibtss_participant_id", data.id);
-    } catch {}
+
+    // A device that has never completed sign-in for this participant must
+    // confirm via email before we trust the typed address.
+    if (!data.id || !isTrustedDevice(data.id)) {
+      const linkRes = await fetch("/api/participant/request-device-link", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: clean }),
+      });
+      if (!linkRes.ok) {
+        return { ok: false, error: "Couldn't send the confirmation email. Please try again in a moment." };
+      }
+      return { ok: false, deviceConfirmationSent: true };
+    }
+
+    completeSignIn({ email: clean, name: data.name ?? null, id: data.id ?? null });
     return { ok: true };
-  }, []);
+  }, [completeSignIn]);
+
+  // Called after a successful /verify-device redirect (?deviceVerified=1) to
+  // actually populate the session from the confirmed participant id.
+  const completeDeviceSignIn = useCallback(async (participantId: string) => {
+    const res = await fetch(`/api/passport/${participantId}`);
+    if (!res.ok) return { ok: false };
+    const data = await res.json();
+    completeSignIn({ email: data.email, name: data.name ?? null, id: participantId });
+    return { ok: true };
+  }, [completeSignIn]);
 
   const signOut = useCallback(() => {
     setState(SIGNED_OUT);
@@ -122,7 +171,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   }, [router]);
 
   return (
-    <SessionContext.Provider value={{ ...state, signIn, signOut, openSignIn }}>
+    <SessionContext.Provider value={{ ...state, signIn, completeDeviceSignIn, signOut, openSignIn }}>
       {children}
     </SessionContext.Provider>
   );

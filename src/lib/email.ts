@@ -62,6 +62,32 @@ export async function sendParticipantVerifyLink(email: string, name: string, ver
   });
 }
 
+export async function sendDeviceConfirmLink(email: string, name: string, confirmUrl: string) {
+  return resend.emails.send({
+    from: FROM,
+    to: email,
+    subject: "Confirm this device for your IBTSS 2026 AI Learning Passport",
+    html: `
+      <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
+        <div style="background:#000000;padding:32px;border-radius:16px 16px 0 0;">
+          <p style="color:#F7A800;font-size:12px;letter-spacing:2px;text-transform:uppercase;margin:0 0 8px;">Fort Hays State University · IBTSS 2026</p>
+          <h1 style="color:white;margin:0;font-size:22px;">Confirm This Device</h1>
+        </div>
+        <div style="padding:32px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:0 0 16px 16px;">
+          <p style="color:#334155;">Hi ${name},</p>
+          <p style="color:#334155;">Someone just tried to sign in to your AI Learning Passport from a new device or browser. If that was you, click below to confirm and continue. This link expires in 15 minutes.</p>
+          <div style="text-align:center;margin:32px 0;">
+            <a href="${confirmUrl}" style="background:#F7A800;color:#000000;padding:14px 32px;border-radius:12px;text-decoration:none;font-weight:700;display:inline-block;">
+              Confirm This Device
+            </a>
+          </div>
+          <p style="color:#94a3b8;font-size:12px;">If this wasn't you, you can safely ignore this email — your passport stays untouched.</p>
+        </div>
+      </div>
+    `,
+  });
+}
+
 export async function sendAdminMagicLink(email: string, verifyUrl: string) {
   return resend.emails.send({
     from: FROM,
@@ -112,6 +138,10 @@ export async function sendCompletionEmail(
               View & Share My Passport
             </a>
           </div>
+          <p style="color:#334155;font-size:13px;line-height:1.6;">
+            Your digital badge is issued after the workshop team processes completions — you'll get a separate email from Credly when it's ready. In the meantime, here's
+            <a href="${BASE_URL}/Credly%20Badges%20at%20FHSU%20-%20Earner%20Experience.pdf" style="color:#8A6A00;font-weight:700;">how to claim it on Credly</a>.
+          </p>
           <p style="color:#94a3b8;font-size:12px;">Share your achievement on LinkedIn to inspire others and promote AI literacy at FHSU!</p>
         </div>
       </div>

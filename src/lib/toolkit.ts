@@ -362,3 +362,9 @@ TOOLKIT_SECTIONS.push({
 export function getToolkitSection(id: string): ToolkitSection | undefined {
   return TOOLKIT_SECTIONS.find((s) => s.id === id);
 }
+
+// Full source PDFs — sign-in gated, served via /api/toolkit/pdf (see that
+// route). Drop the actual files into private-assets/ with these exact names:
+// private-assets/Worksheet.pdf and private-assets/Participant-Toolkit.pdf.
+export const WORKSHEET_PDF_KEY = "worksheet";
+export const PARTICIPANT_TOOLKIT_PDF_KEY = "toolkit";
