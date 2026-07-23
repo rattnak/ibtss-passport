@@ -177,10 +177,10 @@ function PassportPageContent() {
       <div style={{ width: "100%", maxWidth: 672, display: "flex", flexDirection: "column", flex: 1 }}>
 
         {/* ── ID page hero ── */}
-        <div className="passport-cover-bg" style={{ marginTop: 16, borderRadius: 22, overflow: "hidden" }}>
+        <div className="passport-cover-bg" style={{ marginTop: 16, borderRadius: 16, overflow: "hidden" }}>
           <div style={{
-            borderRadius: 22,
-            padding: "18px 16px 12px", position: "relative", overflow: "hidden",
+            borderRadius: 16,
+            padding: "20px 24px 18px", position: "relative", overflow: "hidden",
             background: "linear-gradient(160deg, rgba(255,255,255,0.04) 0%, transparent 100%)",
           }}>
             {/* watermark */}
@@ -250,47 +250,51 @@ function PassportPageContent() {
         {/* ── Body ── */}
         <div style={{ padding: "20px 0 32px" }}>
 
-          {/* Progress ring (with its instruction stacked beneath it) and
-              the 3 station stamps share one outer bordered container, laid
-              out in a row — each stamp keeps its own inner border/shadow
-              for a clear interactive boundary and full-size tap target. */}
-          <h2 style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase", color: "#999", marginBottom: 12 }}>
-            Station Stamps
-          </h2>
-          <div className="stamp-grid" style={{ marginBottom: 18 }}>
-            {/* Ring + instruction */}
-            <div style={{
-              display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center",
-              justifyContent: "center",
-              background: "white", border: "1px solid #ECECEC", borderRadius: 16,
-              padding: "16px 8px", boxShadow: "0 1px 8px rgba(0,0,0,0.04)",
-            }}>
-              <div style={{ position: "relative", width: 78, height: 78, flexShrink: 0 }}
-                role="img" aria-label={`${completed.length} of 3 stations completed`}>
-                <svg viewBox="0 0 78 78" style={{ width: 78, height: 78, transform: "rotate(-90deg)" }}>
-                  <circle cx="39" cy="39" r="32" fill="none" stroke="#EFEFEF" strokeWidth="7" />
-                  <circle cx="39" cy="39" r="32" fill="none" stroke="var(--fhsu-gold)" strokeWidth="7"
-                    strokeLinecap="round"
-                    strokeDasharray={2 * Math.PI * 32}
-                    strokeDashoffset={2 * Math.PI * 32 * (1 - completed.length / 3)}
-                    style={{ transition: "stroke-dashoffset 0.7s cubic-bezier(0.22,1,0.36,1)" }} />
-                </svg>
-                <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-                  <span style={{ fontSize: 18, fontWeight: 800, color: "var(--fhsu-black)", lineHeight: 1 }}>{completed.length}<span style={{ fontSize: 11, color: "#999", fontWeight: 600 }}>/3</span></span>
-                  <span style={{ fontSize: 7.5, letterSpacing: 1, textTransform: "uppercase", color: "#999", marginTop: 2 }}>Stamps</span>
-                </div>
+          {/* Progress ring + stats */}
+          <div style={{
+            display: "flex", alignItems: "center", gap: 18,
+            background: "white", border: "1px solid #ECECEC", borderRadius: 16,
+            padding: "16px 18px", marginBottom: 18, boxShadow: "0 1px 8px rgba(0,0,0,0.04)",
+          }}>
+            <div style={{ position: "relative", width: 84, height: 84, flexShrink: 0 }}
+              role="img" aria-label={`${completed.length} of 3 stations completed`}>
+              <svg viewBox="0 0 84 84" style={{ width: 84, height: 84, transform: "rotate(-90deg)" }}>
+                <circle cx="42" cy="42" r="34" fill="none" stroke="#EFEFEF" strokeWidth="8" />
+                <circle cx="42" cy="42" r="34" fill="none" stroke="var(--fhsu-gold)" strokeWidth="8"
+                  strokeLinecap="round"
+                  strokeDasharray={2 * Math.PI * 34}
+                  strokeDashoffset={2 * Math.PI * 34 * (1 - completed.length / 3)}
+                  style={{ transition: "stroke-dashoffset 0.7s cubic-bezier(0.22,1,0.36,1)" }} />
+              </svg>
+              <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                <span style={{ fontSize: 21, fontWeight: 800, color: "var(--fhsu-black)", lineHeight: 1 }}>{completed.length}<span style={{ fontSize: 12, color: "#999", fontWeight: 600 }}>/3</span></span>
+                <span style={{ fontSize: 8.5, letterSpacing: 1, textTransform: "uppercase", color: "#999", marginTop: 3 }}>Stamps</span>
               </div>
-              <p style={{ fontSize: 11.5, fontWeight: 700, color: "var(--fhsu-black)", marginTop: 8, lineHeight: 1.25 }}>
-                {progress.is_complete ? "All done!" : `${3 - completed.length} to go`}
+            </div>
+            <div style={{ flex: 1 }}>
+              <p style={{ fontSize: 15, fontWeight: 700, color: "var(--fhsu-black)", marginBottom: 4 }}>
+                {progress.is_complete
+                  ? "All three lenses collected!"
+                  : `${3 - completed.length} station${3 - completed.length !== 1 ? "s" : ""} to go`}
+              </p>
+              <p style={{ fontSize: 12.5, color: "#767676", lineHeight: 1.55 }}>
+                {progress.is_complete
+                  ? "Check the Toolkit tab for everything you used today."
+                  : "Scan the QR code at each station to collect its stamp."}
               </p>
               {!progress.is_complete && (
-                <Link href="/stations" style={{ display: "inline-flex", alignItems: "center", gap: 3, marginTop: 3, fontSize: 10.5, fontWeight: 700, color: "var(--gold-text)", textDecoration: "none" }}>
-                  Go to stations <ArrowRight size={10} strokeWidth={2.5} aria-hidden="true" />
+                <Link href="/stations" style={{ display: "inline-flex", alignItems: "center", gap: 5, marginTop: 8, fontSize: 12.5, fontWeight: 700, color: "var(--gold-text)", textDecoration: "none" }}>
+                  Go to stations <ArrowRight size={13} strokeWidth={2.5} aria-hidden="true" />
                 </Link>
               )}
             </div>
+          </div>
 
-            {/* Stamps */}
+          {/* Stamp grid */}
+          <h2 style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase", color: "#999", marginBottom: 12 }}>
+            Station Stamps
+          </h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
             {STATIONS.map((station, i) => {
               const Icon = STATION_ICONS[i];
               const sc = STATION_COLORS[i];
