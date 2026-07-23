@@ -173,11 +173,11 @@ function PassportPageContent() {
   }
 
   return (
-    <main className="px-4" style={{ flex: 1, background: "white", display: "flex", flexDirection: "column", alignItems: "center" }}>
+    <main className="px-4 py-8" style={{ flex: 1, background: "white", display: "flex", flexDirection: "column", alignItems: "center" }}>
       <div style={{ width: "100%", maxWidth: 672, display: "flex", flexDirection: "column", flex: 1 }}>
 
         {/* ── ID page hero ── */}
-        <div className="passport-cover-bg" style={{ marginTop: 16, borderRadius: 16, overflow: "hidden" }}>
+        <div className="passport-cover-bg" style={{ borderRadius: 16, overflow: "hidden" }}>
           <div style={{
             borderRadius: 16,
             padding: "20px 24px 18px", position: "relative", overflow: "hidden",
