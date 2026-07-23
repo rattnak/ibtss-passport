@@ -111,7 +111,7 @@ function SessionCard({ session }: { session: AgendaSession }) {
 
 export default function HomePage() {
   return (
-    <main className="min-h-full flex flex-col items-center px-4 py-8" style={{ background: "white" }}>
+    <main className="min-h-full flex flex-col items-center px-4 pt-4 pb-8" style={{ background: "white" }}>
 
       {/* ── Header / Banner ── */}
       <div className="mb-8" style={{ width: "100%", maxWidth: 672 }}>
