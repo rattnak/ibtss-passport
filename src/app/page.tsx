@@ -114,7 +114,7 @@ export default function HomePage() {
     <main className="min-h-full flex flex-col items-center px-4 pt-4 pb-7" style={{ background: "white" }}>
 
       {/* ── Header / Banner ── */}
-      <div className="mb-8" style={{ width: "100%", maxWidth: 672 }}>
+      <div className="page-container mb-8">
         <div className="passport-cover-bg" style={{
           border: "1.5px solid var(--gold)",
           borderRadius: 16,
@@ -160,7 +160,7 @@ export default function HomePage() {
       </div>
 
       {/* ── Agenda ── */}
-      <div style={{ width: "100%", maxWidth: 672, marginBottom: 28 }}>
+      <div className="page-container" style={{ marginBottom: 28 }}>
         <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 12 }}>
           <h2 style={{ fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 20, fontWeight: 700, color: "var(--fhsu-black)" }}>
             Workshop Agenda
@@ -173,8 +173,7 @@ export default function HomePage() {
       </div>
 
       {/* ── Stations shortcut ── */}
-      <Link href="/stations" style={{
-        width: "100%", maxWidth: 672,
+      <Link href="/stations" className="page-container" style={{
         display: "flex", alignItems: "center", gap: 14, textDecoration: "none",
         background: "linear-gradient(135deg, rgba(247,168,0,0.16), rgba(247,168,0,0.06))",
         border: "1px solid var(--gold)",
@@ -193,8 +192,7 @@ export default function HomePage() {
       </Link>
 
       {/* ── Passport CTA (register/sign in lives on the Passport tab) ── */}
-      <Link href="/my-passport" style={{
-        width: "100%", maxWidth: 672,
+      <Link href="/my-passport" className="page-container" style={{
         display: "flex", alignItems: "center", gap: 14, textDecoration: "none",
         background: "var(--fhsu-black)",
         borderRadius: 14, padding: "16px 18px", marginBottom: 28,
@@ -212,7 +210,7 @@ export default function HomePage() {
       </Link>
 
       {/* ── Location map ── */}
-      <div id="location-map" style={{ width: "100%", maxWidth: 672, scrollMarginTop: 20 }}>
+      <div id="location-map" className="page-container" style={{ scrollMarginTop: 20 }}>
         <h2 style={{ fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 20, fontWeight: 700, color: "var(--fhsu-black)", marginBottom: 12 }}>
           Location
         </h2>

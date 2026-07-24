@@ -79,7 +79,7 @@ export default function BadgePage() {
 
   return (
     <main style={{ flex: 1, background: "#FAFAFA", display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <div style={{ width: "100%", maxWidth: 672, display: "flex", flexDirection: "column", padding: "16px 16px 28px" }}>
+      <div className="page-container" style={{ display: "flex", flexDirection: "column", padding: "16px 16px 28px" }}>
 
         {/* ── Unified credential card: navy header band flows directly into
              the white body, single rounded shell — matches how public
