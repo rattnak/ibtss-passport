@@ -9,7 +9,7 @@
 export function Footer() {
   return (
     <p style={{ fontSize: 13, fontWeight: 600, color: "#999", textAlign: "center", marginTop: 28, marginBottom: 0 }}>
-      Developed by <a href="https://rattnak.com" target="_blank" rel="noopener noreferrer" style={{ color: "#767676", fontWeight: 700, textDecoration: "underline" }}>Chanrattnak Mong</a>
+      Developed by <a href="https://www.linkedin.com/in/mongchanrattnak/" target="_blank" rel="noopener noreferrer" style={{ color: "#767676", fontWeight: 700, textDecoration: "underline" }}>Chanrattnak Mong</a>
     </p>
   );
 }
