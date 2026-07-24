@@ -345,7 +345,7 @@ export default function ToolkitSectionPage() {
 
   return (
     <main className="min-h-full flex flex-col items-center px-4 pt-4 pb-8" style={{ background: "white" }}>
-      <div className="page-container" style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+      <div className="page-container" style={{ display: "flex", flexDirection: "column" }}>
 
         {/* Header — consistent with Stations / Toolkit / Post-Workshop */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
@@ -386,7 +386,7 @@ export default function ToolkitSectionPage() {
         </div>
 
         {/* Body */}
-        <div style={{ flex: 1, paddingBottom: 24 }}>
+        <div style={{ paddingBottom: 24 }}>
           {needsSignIn && isWorkshopOver() ? (
             <div style={{ background: "#FAFAFA", borderRadius: 16, padding: "28px 22px", border: "1px solid #E5E5E5", textAlign: "center" }}>
               <div style={{ width: 56, height: 56, borderRadius: "50%", background: "#F2F2F2", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px" }}>

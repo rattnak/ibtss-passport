@@ -92,7 +92,7 @@ function StationsPageContent() {
   const resultColor = result && result.stationId ? STATION_COLORS[result.stationId - 1] : null;
 
   return (
-    <main className="min-h-full flex flex-col items-center justify-center px-4 pt-12 pb-8" style={{ background: "white" }}>
+    <main className="min-h-full flex flex-col items-center px-4 pt-12 pb-8" style={{ background: "white" }}>
       <div className="page-container">
 
         {/* Header */}
