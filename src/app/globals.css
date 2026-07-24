@@ -37,16 +37,12 @@
   padding-bottom: calc(76px + env(safe-area-inset-bottom));
 }
 
-/* Responsive page column: phone-first, widens on tablet/desktop */
+/* Responsive page column — shrinks to fit narrow screens, capped at 672px
+   to match the fixed-width columns used on the agenda/passport/badge
+   pages, so every page reads the same width once there's room for it. */
 .page-container {
   width: 100%;
-  max-width: 28rem; /* 448px */
-}
-@media (min-width: 640px) {
-  .page-container { max-width: 36rem; } /* 576px */
-}
-@media (min-width: 1024px) {
-  .page-container { max-width: 42rem; } /* 672px */
+  max-width: 42rem; /* 672px */
 }
 
 /* Top bar responsiveness: hide the subtitle on tiny screens, grow the name chip with viewport */
