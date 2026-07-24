@@ -248,7 +248,7 @@ function PassportPageContent() {
         </div>
 
         {/* ── Body ── */}
-        <div style={{ padding: "20px 0 32px" }}>
+        <div style={{ paddingTop: 20 }}>
 
           {/* Progress ring + stats */}
           <div style={{
