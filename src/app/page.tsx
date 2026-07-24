@@ -111,7 +111,7 @@ function SessionCard({ session }: { session: AgendaSession }) {
 
 export default function HomePage() {
   return (
-    <main className="min-h-full flex flex-col items-center px-4 pt-4 pb-8" style={{ background: "white" }}>
+    <main className="min-h-full flex flex-col items-center px-4 pt-4 pb-7" style={{ background: "white" }}>
 
       {/* ── Header / Banner ── */}
       <div className="mb-8" style={{ width: "100%", maxWidth: 672 }}>
@@ -212,7 +212,7 @@ export default function HomePage() {
       </Link>
 
       {/* ── Location map ── */}
-      <div id="location-map" style={{ width: "100%", maxWidth: 672, marginBottom: 28, scrollMarginTop: 20 }}>
+      <div id="location-map" style={{ width: "100%", maxWidth: 672, scrollMarginTop: 20 }}>
         <h2 style={{ fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 20, fontWeight: 700, color: "var(--fhsu-black)", marginBottom: 12 }}>
           Location
         </h2>

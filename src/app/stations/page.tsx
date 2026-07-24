@@ -9,6 +9,7 @@ import {
 import { STATIONS, getStation } from "@/lib/stations";
 import { useSession } from "@/lib/session";
 import QrScanner from "@/components/QrScanner";
+import { Footer } from "@/components/Footer";
 
 const STATION_ICONS = [BookOpen, Settings2, Search];
 // Darkened for WCAG AA contrast on white
@@ -92,7 +93,7 @@ function StationsPageContent() {
   const resultColor = result && result.stationId ? STATION_COLORS[result.stationId - 1] : null;
 
   return (
-    <main className="min-h-full flex flex-col items-center px-4 pt-12 pb-8" style={{ background: "white" }}>
+    <main className="min-h-full flex flex-col items-center px-4 pt-12 pb-7" style={{ background: "white" }}>
       <div className="page-container">
 
         {/* Header */}
@@ -257,9 +258,7 @@ function StationsPageContent() {
           })}
         </div>
 
-        <p style={{ fontSize: 12, color: "#767676", textAlign: "center", marginTop: 20, lineHeight: 1.6 }}>
-          Scanning the station&apos;s printed QR code with your phone&apos;s camera app also works.
-        </p>
+        <Footer />
       </div>
 
       {scanning && <QrScanner onResult={onScan} onClose={() => setScanning(false)} />}

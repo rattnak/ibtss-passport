@@ -88,7 +88,7 @@ export default function ToolkitIndexPage() {
   );
 
   return (
-    <main className="min-h-full flex flex-col items-center px-4 pt-4 pb-8" style={{ background: "white" }}>
+    <main className="min-h-full flex flex-col items-center px-4 pt-4 pb-7" style={{ background: "white" }}>
       <div className="page-container">
         <h1 style={{ fontFamily: "'Barlow Condensed', 'Barlow', sans-serif", fontSize: 26, fontWeight: 700, color: "var(--fhsu-black)", marginBottom: 8 }}>
           Participant Toolkit

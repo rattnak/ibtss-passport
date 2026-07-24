@@ -265,7 +265,7 @@ export default function ToolkitSectionPage() {
   // left-aligned title/intro, uppercase group labels, card-grid of link cards.
   if (section.id === "post-workshop") {
     return (
-      <main className="min-h-full flex flex-col items-center px-4 pt-4 pb-8" style={{ background: "white" }}>
+      <main className="min-h-full flex flex-col items-center px-4 pt-4 pb-7" style={{ background: "white" }}>
         <div className="page-container">
           <nav aria-label="Breadcrumb" style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18, minHeight: 44 }}>
             <ChevronLeft size={15} color="#666" strokeWidth={2} aria-hidden="true" />

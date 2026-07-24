@@ -173,7 +173,7 @@ function PassportPageContent() {
   }
 
   return (
-    <main className="px-4 pt-4 pb-8" style={{ flex: 1, background: "white", display: "flex", flexDirection: "column", alignItems: "center" }}>
+    <main className="px-4 pt-4 pb-7" style={{ flex: 1, background: "white", display: "flex", flexDirection: "column", alignItems: "center" }}>
       <div style={{ width: "100%", maxWidth: 672, display: "flex", flexDirection: "column" }}>
 
         {/* ── ID page hero ── */}

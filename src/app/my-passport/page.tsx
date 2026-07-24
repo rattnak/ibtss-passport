@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { BookOpen, LogIn, UserPlus, MailCheck } from "lucide-react";
 import { useSession } from "@/lib/session";
+import { Footer } from "@/components/Footer";
 
 const inputStyle: React.CSSProperties = {
   width: "100%", border: "1.5px solid #CCCCCC", borderRadius: 12,
@@ -149,7 +150,7 @@ function MyPassportContent() {
 
   if (deviceConfirmEmail) {
     return (
-      <main className="min-h-full flex flex-col items-center justify-center px-4 py-10" style={{ background: "white" }}>
+      <main className="min-h-full flex flex-col items-center justify-center px-4 pt-10 pb-7" style={{ background: "white" }}>
         <div className="w-full" style={{ maxWidth: 420 }}>
           <div style={{
             background: "white", borderRadius: 18, padding: "28px 22px", textAlign: "center",
@@ -173,6 +174,7 @@ function MyPassportContent() {
               </button>
             </p>
           </div>
+          <Footer />
         </div>
       </main>
     );
@@ -180,7 +182,7 @@ function MyPassportContent() {
 
   if (pendingEmail) {
     return (
-      <main className="min-h-full flex flex-col items-center justify-center px-4 py-10" style={{ background: "white" }}>
+      <main className="min-h-full flex flex-col items-center justify-center px-4 pt-10 pb-7" style={{ background: "white" }}>
         <div className="w-full" style={{ maxWidth: 420 }}>
           <div style={{
             background: "white", borderRadius: 18, padding: "28px 22px", textAlign: "center",
@@ -204,13 +206,14 @@ function MyPassportContent() {
               </button>
             </p>
           </div>
+          <Footer />
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-full flex flex-col items-center px-4 py-10" style={{ background: "white" }}>
+    <main className="min-h-full flex flex-col items-center px-4 pt-10 pb-7" style={{ background: "white" }}>
       <div className="w-full" style={{ maxWidth: 420 }}>
 
         <div style={{ textAlign: "center", marginBottom: 24 }}>
@@ -377,6 +380,7 @@ function MyPassportContent() {
             </form>
           </div>
         )}
+        <Footer />
       </div>
     </main>
   );

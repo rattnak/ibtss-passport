@@ -79,14 +79,14 @@ export default function BadgePage() {
 
   return (
     <main style={{ flex: 1, background: "#FAFAFA", display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <div style={{ width: "100%", maxWidth: 672, display: "flex", flexDirection: "column", padding: "16px 16px 32px" }}>
+      <div style={{ width: "100%", maxWidth: 672, display: "flex", flexDirection: "column", padding: "16px 16px 28px" }}>
 
         {/* ── Unified credential card: navy header band flows directly into
              the white body, single rounded shell — matches how public
              credential pages (Credly, LinkedIn certificates) present a
              badge as one continuous surface rather than stacked boxes. ── */}
         <div style={{
-          borderRadius: 20, overflow: "hidden", marginBottom: 24,
+          borderRadius: 20, overflow: "hidden",
           border: "1px solid #ECECEC", boxShadow: "0 1px 10px rgba(0,0,0,0.05)",
         }}>
           {/* Header band — same passport-page treatment as the owner view:

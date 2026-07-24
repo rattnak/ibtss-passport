@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { BookOpen, Settings2, Search, CheckCircle2, Lock, ChevronRight } from "lucide-react";
 import { getStation } from "@/lib/stations";
+import { Footer } from "@/components/Footer";
 
 const STATION_ICONS = [BookOpen, Settings2, Search];
 const STATION_COLORS = [
@@ -69,7 +70,7 @@ export default function StampPage() {
   const remaining = result ? 3 - (result.stampsCollected ?? 0) : 0;
 
   return (
-    <main className="min-h-full flex flex-col items-center justify-center px-4 py-10" style={{ background: "white" }}>
+    <main className="min-h-full flex flex-col items-center justify-center px-4 pt-10 pb-7" style={{ background: "white" }}>
 
       {/* Station header card */}
       <div style={{
@@ -195,6 +196,8 @@ export default function StampPage() {
           </button>
         </div>
       )}
+
+      <Footer />
     </main>
   );
 }
