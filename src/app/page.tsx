@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   ChevronDown, Clock, MapPin, Coffee, PenLine, BookOpen,
@@ -110,6 +110,24 @@ function SessionCard({ session }: { session: AgendaSession }) {
 }
 
 export default function HomePage() {
+  // The date/time span and location link share a flex row that wraps on
+  // narrow screens. When they're still side by side, space is tight and the
+  // location shows as "AUPP"; once the row wraps, the location link gets a
+  // full line to itself, so the full name fits and should be shown instead.
+  const dateSpanRef = useRef<HTMLSpanElement>(null);
+  const locationLinkRef = useRef<HTMLAnchorElement>(null);
+  const [locationWrapped, setLocationWrapped] = useState(false);
+
+  useEffect(() => {
+    function checkWrap() {
+      if (!dateSpanRef.current || !locationLinkRef.current) return;
+      setLocationWrapped(locationLinkRef.current.offsetTop > dateSpanRef.current.offsetTop);
+    }
+    checkWrap();
+    window.addEventListener("resize", checkWrap);
+    return () => window.removeEventListener("resize", checkWrap);
+  }, []);
+
   return (
     <main className="min-h-full flex flex-col items-center px-4 pt-4 pb-7" style={{ background: "white" }}>
 
@@ -147,13 +165,17 @@ export default function HomePage() {
             From Challenge to Opportunity
           </p>
           <div style={{ display: "flex", justifyContent: "center", gap: 16, flexWrap: "wrap" }}>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "rgba(255,255,255,0.7)" }}>
+            <span ref={dateSpanRef} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "rgba(255,255,255,0.7)" }}>
               <Clock size={13} color="var(--gold)" strokeWidth={2} /> {WORKSHOP_INFO.date} · {WORKSHOP_INFO.time}
             </span>
-            <a href="#location-map" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "rgba(255,255,255,0.7)", textDecoration: "underline" }}>
+            <a ref={locationLinkRef} href="#location-map" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "rgba(255,255,255,0.7)", textDecoration: "underline" }}>
               <MapPin size={13} color="var(--gold)" strokeWidth={2} />
-              <span className="full-name">American University of Phnom Penh</span>
-              <span className="short-name">AUPP</span>
+              {locationWrapped ? "American University of Phnom Penh" : (
+                <>
+                  <span className="full-name">American University of Phnom Penh</span>
+                  <span className="short-name">AUPP</span>
+                </>
+              )}
             </a>
           </div>
         </div>
